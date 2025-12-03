@@ -3,6 +3,7 @@ psycopg2-binary
 bcrypt
 pandas
 numpy
+scipy
 plotly
 matplotlib
 scikit-fuzzy
