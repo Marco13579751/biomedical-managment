@@ -4,6 +4,7 @@ bcrypt
 pandas
 numpy
 scipy
+networkx
 plotly
 matplotlib
 scikit-fuzzy
