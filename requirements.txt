@@ -9,3 +9,4 @@ scikit-fuzzy
 streamlit-echarts
 altair
 streamlit-elements
+streamlit-option-menu
