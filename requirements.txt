@@ -1,0 +1,11 @@
+streamlit
+psycopg2-binary
+bcrypt
+pandas
+numpy
+plotly
+matplotlib
+scikit-fuzzy
+streamlit-echarts
+altair
+streamlit-elements
