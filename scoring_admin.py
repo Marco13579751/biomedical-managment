@@ -1571,7 +1571,7 @@ def show_prioritization_score_page():
             )
 
 
-            st.dataframe(styled_df, use_container_width=True, hide_index=True)
+            # st.dataframe(styled_df, use_container_width=True, hide_index=True)
 
             # # Crea un buffer in memoria
             # buffer = BytesIO()
