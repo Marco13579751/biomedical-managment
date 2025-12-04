@@ -1573,18 +1573,18 @@ def show_prioritization_score_page():
 
             st.dataframe(styled_df, use_container_width=True, hide_index=True)
 
-            # Crea un buffer in memoria
-            buffer = BytesIO()
-            with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
-                df.to_excel(writer, index=False, sheet_name='Device Analysis')
-            buffer.seek(0)
+            # # Crea un buffer in memoria
+            # buffer = BytesIO()
+            # with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+            #     df.to_excel(writer, index=False, sheet_name='Device Analysis')
+            # buffer.seek(0)
             
-            st.download_button(
-                label="📥 Export to Excel",
-                data=buffer.getvalue(),
-                file_name=f"device_analysis_{dtm.date.today()}.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            )
+            # st.download_button(
+            #     label="📥 Export to Excel",
+            #     data=buffer.getvalue(),
+            #     file_name=f"device_analysis_{dtm.date.today()}.xlsx",
+            #     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            # )
         with tab2:
             if valid_scores:
                 col1, col2, col3 = st.columns(3)
