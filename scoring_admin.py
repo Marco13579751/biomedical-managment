@@ -1719,7 +1719,7 @@ def show_prioritization_score_page():
                                 return 'background-color: #e6ffe6'  # verde scuro
                             return ''
                         
-                        styled_df = risk_df.style.map(highlight_criticity, subset=['Criticity'])
+                        styled_df = risk_df.style.applymap(highlight_criticity, subset=['Criticity'])
                         
                         st.dataframe(styled_df, hide_index=True, use_container_width=True)
                         st.warning(f"⚠️ {len(high_risk_devices)} devices require attention!")
