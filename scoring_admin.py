@@ -1975,86 +1975,86 @@ def show_prioritization_score_page():
         #         st.warning("No scoring data available. Please run fuzzy logic analysis first.")
 
 
-        with tab3:
-            if valid_scores:
-                costs = []
-                maintenance_costs = []
-                cost_ratio = []
+        # with tab3:
+        #     if valid_scores:
+        #         costs = []
+        #         maintenance_costs = []
+        #         cost_ratio = []
         
-                for d in filtered_devices:
-                    device_id = d[0]
-                    cost_inr = d[6]
-                    score_data = score_lookup.get(device_id)
+        #         for d in filtered_devices:
+        #             device_id = d[0]
+        #             cost_inr = d[6]
+        #             score_data = score_lookup.get(device_id)
                     
-                    if score_data and cost_inr is not None:
-                        costs.append(cost_inr)
-                        if score_data.get('eq_function') is not None:
-                            maintenance_costs.append(score_data['eq_function'])
-                            cost_ratio.append(score_data['eq_function'])
+        #             if score_data and cost_inr is not None:
+        #                 costs.append(cost_inr)
+        #                 if score_data.get('eq_function') is not None:
+        #                     maintenance_costs.append(score_data['eq_function'])
+        #                     cost_ratio.append(score_data['eq_function'])
 
-                fin_col1, fin_col2, fin_col3 = st.columns(3)
+        #         fin_col1, fin_col2, fin_col3 = st.columns(3)
 
-                with fin_col1:
-                    total_value = sum(costs) if costs else 0
-                    st.metric("Total Asset Value", f"₹{total_value:,.0f}")
+        #         with fin_col1:
+        #             total_value = sum(costs) if costs else 0
+        #             st.metric("Total Asset Value", f"₹{total_value:,.0f}")
 
-                with fin_col2:
-                    avg_cost = sum(costs) / len(costs) if costs else 0
-                    st.metric("Avg Device Value", f"₹{avg_cost:,.0f}")
+        #         with fin_col2:
+        #             avg_cost = sum(costs) / len(costs) if costs else 0
+        #             st.metric("Avg Device Value", f"₹{avg_cost:,.0f}")
 
-                with fin_col3:
-                    if cost_ratio:
-                        devices_above_15 = sum(1 for u in cost_ratio if u > 15)
-                        st.metric("High Maintenance Ratio Devices", f"{devices_above_15}", 
-                                    delta="⚠️ More than usual" if devices_above_15 > 0 else "✅ All Good")
-                    else:
-                        st.metric("High Maintenance Ratio Devices", "N/A")
+        #         with fin_col3:
+        #             if cost_ratio:
+        #                 devices_above_15 = sum(1 for u in cost_ratio if u > 15)
+        #                 st.metric("High Maintenance Ratio Devices", f"{devices_above_15}", 
+        #                             delta="⚠️ More than usual" if devices_above_15 > 0 else "✅ All Good")
+        #             else:
+        #                 st.metric("High Maintenance Ratio Devices", "N/A")
 
-                fin_chart1, fin_chart2 = st.columns(2)
-                with fin_chart1:
-                    class_costs = {}
-                    for d in filtered_devices:
-                        device_id = d[0]
-                        location = location_lookup.get(device_id, {})
-                        ward_name = location.get('ward_name')
-                        cost = d[6] or 0
+        #         fin_chart1, fin_chart2 = st.columns(2)
+        #         with fin_chart1:
+        #             class_costs = {}
+        #             for d in filtered_devices:
+        #                 device_id = d[0]
+        #                 location = location_lookup.get(device_id, {})
+        #                 ward_name = location.get('ward_name')
+        #                 cost = d[6] or 0
 
-                        if ward_name in class_costs:
-                            class_costs[ward_name] += cost
-                        else:
-                            class_costs[ward_name] = cost
+        #                 if ward_name in class_costs:
+        #                     class_costs[ward_name] += cost
+        #                 else:
+        #                     class_costs[ward_name] = cost
 
-                    if class_costs:
-                        fig = px.pie(
-                            values=list(class_costs.values()), 
-                            names=list(class_costs.keys()),
-                            title="Asset Value by Ward"
-                        )
-                        st.plotly_chart(fig, use_container_width=True)
+        #             if class_costs:
+        #                 fig = px.pie(
+        #                     values=list(class_costs.values()), 
+        #                     names=list(class_costs.keys()),
+        #                     title="Asset Value by Ward"
+        #                 )
+        #                 st.plotly_chart(fig, use_container_width=True)
 
-                with fin_chart2:
-                    if costs and maintenance_costs and len(costs) == len(maintenance_costs):
-                        maintenance_array = np.array(maintenance_costs)
-                        costs_array = np.array(costs)
+        #         with fin_chart2:
+        #             if costs and maintenance_costs and len(costs) == len(maintenance_costs):
+        #                 maintenance_array = np.array(maintenance_costs)
+        #                 costs_array = np.array(costs)
 
-                        ratios = np.divide(maintenance_array, costs_array, out=np.zeros_like(maintenance_array), where=costs_array!=0)
-                        scatter_df = pd.DataFrame({
-                            'Asset Value': costs,
-                            'Maintenance Cost %': ratios*100,
-                            'Device ID': [d[0] for d in filtered_devices if d[6] is not None and score_lookup.get(d[0]) and score_lookup.get(d[0]).get('eq_function') is not None]
-                        })
+        #                 ratios = np.divide(maintenance_array, costs_array, out=np.zeros_like(maintenance_array), where=costs_array!=0)
+        #                 scatter_df = pd.DataFrame({
+        #                     'Asset Value': costs,
+        #                     'Maintenance Cost %': ratios*100,
+        #                     'Device ID': [d[0] for d in filtered_devices if d[6] is not None and score_lookup.get(d[0]) and score_lookup.get(d[0]).get('eq_function') is not None]
+        #                 })
 
-                        fig = px.scatter(scatter_df, x='Asset Value', y='Maintenance Cost %',
-                                        hover_data=['Device ID'],
-                                        title="Maintenance Cost Ratio vs Asset Value")
-                        st.plotly_chart(fig, use_container_width=True)
+        #                 fig = px.scatter(scatter_df, x='Asset Value', y='Maintenance Cost %',
+        #                                 hover_data=['Device ID'],
+        #                                 title="Maintenance Cost Ratio vs Asset Value")
+        #                 st.plotly_chart(fig, use_container_width=True)
 
 
-            else:
-                st.warning("No financial data available for analysis.")
+        #     else:
+        #         st.warning("No financial data available for analysis.")
 
-        if not filtered_devices:
-            st.info("No devices match the current filters. Please adjust your search criteria.")
+        # if not filtered_devices:
+        #     st.info("No devices match the current filters. Please adjust your search criteria.")
     
 
 
