@@ -1236,827 +1236,827 @@ def show_prioritization_score_page():
             except Exception as e:
                 st.error(f"Error loading device information: {str(e)}")
 
-    with tab1:
+#     with tab1:
     
-        # # OTTIMIZZAZIONE: carica tutto con 1 query invece di 470+
-        # all_devices_with_scores = get_all_devices_with_scores_optimized()
-        # all_devices = get_all_devices()
-        # rooms = get_all_rooms()
-        # wards = get_all_wards()
+#         # # OTTIMIZZAZIONE: carica tutto con 1 query invece di 470+
+#         # all_devices_with_scores = get_all_devices_with_scores_optimized()
+#         # all_devices = get_all_devices()
+#         # rooms = get_all_rooms()
+#         # wards = get_all_wards()
         
  
 
-        # ward_options = {"All": "All Wards"}
-        # ward_options.update({str(w[0]): w[1] for w in wards})
+#         # ward_options = {"All": "All Wards"}
+#         # ward_options.update({str(w[0]): w[1] for w in wards})
 
-        # room_options = {"All": "All Rooms"}
-        # room_options.update({f"{r[0]}": f"Floor {r[1]} - {r[2]}" for r in rooms})
+#         # room_options = {"All": "All Rooms"}
+#         # room_options.update({f"{r[0]}": f"Floor {r[1]} - {r[2]}" for r in rooms})
 
-        # col1, col2, col3 = st.columns(3)
+#         # col1, col2, col3 = st.columns(3)
 
-        # with col1:
-        #     selected_ward = st.selectbox(
-        #         "Filter by Ward:",
-        #         options=list(ward_options.keys()),
-        #         format_func=lambda x: ward_options[x],key='c'
-        #     )
+#         # with col1:
+#         #     selected_ward = st.selectbox(
+#         #         "Filter by Ward:",
+#         #         options=list(ward_options.keys()),
+#         #         format_func=lambda x: ward_options[x],key='c'
+#         #     )
 
-        # with col2:
-        #     if selected_ward != "All":
-        #         filtered_rooms = [r for r in rooms if r[3] == int(selected_ward)]
-        #         room_filter_options = {"All": "All Rooms in Ward"}
-        #         room_filter_options.update({f"{r[0]}": f"Floor {r[1]} - {r[2]}" for r in filtered_rooms})
-        #     else:
-        #         room_filter_options = room_options
+#         # with col2:
+#         #     if selected_ward != "All":
+#         #         filtered_rooms = [r for r in rooms if r[3] == int(selected_ward)]
+#         #         room_filter_options = {"All": "All Rooms in Ward"}
+#         #         room_filter_options.update({f"{r[0]}": f"Floor {r[1]} - {r[2]}" for r in filtered_rooms})
+#         #     else:
+#         #         room_filter_options = room_options
         
-        #     selected_room = st.selectbox(
-        #         "Filter by Room:",
-        #         options=list(room_filter_options.keys()),
-        #         format_func=lambda x: room_filter_options[x], key='d'
-        #     )
+#         #     selected_room = st.selectbox(
+#         #         "Filter by Room:",
+#         #         options=list(room_filter_options.keys()),
+#         #         format_func=lambda x: room_filter_options[x], key='d'
+#         #     )
 
-        # with col3:
-        #     search = st.text_input("🔍 Search devices:", placeholder="Search by ID, description, brand....")
+#         # with col3:
+#         #     search = st.text_input("🔍 Search devices:", placeholder="Search by ID, description, brand....")
 
-        # filtered_devices = []
+#         # filtered_devices = []
 
-        # for d in all_devices:
-        #     device_id, parent_id, room_id, description, device_class, usage_type, cost_inr, present, brand, model, install_date, udi, serial_number, manufacturer_date, gmdn = d
+#         # for d in all_devices:
+#         #     device_id, parent_id, room_id, description, device_class, usage_type, cost_inr, present, brand, model, install_date, udi, serial_number, manufacturer_date, gmdn = d
     
-        #     device_room = next((r for r in rooms if r[0] == room_id), None)
+#         #     device_room = next((r for r in rooms if r[0] == room_id), None)
     
-        #     if selected_ward != "All":
-        #         if not device_room or device_room[3] != int(selected_ward):
-        #             continue
+#         #     if selected_ward != "All":
+#         #         if not device_room or device_room[3] != int(selected_ward):
+#         #             continue
     
-        #     if selected_room != "All":
-        #         if str(room_id) != selected_room:
-        #             continue
+#         #     if selected_room != "All":
+#         #         if str(room_id) != selected_room:
+#         #             continue
     
-        #     if search:
-        #         search_lower = search.lower()
-        #         room_info = f"Floor {device_room[1]} - {device_room[2]}" if device_room else ""
+#         #     if search:
+#         #         search_lower = search.lower()
+#         #         room_info = f"Floor {device_room[1]} - {device_room[2]}" if device_room else ""
         
-        #         search_text = f"{serial_number} {description} {brand} {model} {room_info}".lower()
-        #         if search_lower not in search_text:
-        #             continue
+#         #         search_text = f"{serial_number} {description} {brand} {model} {room_info}".lower()
+#         #         if search_lower not in search_text:
+#         #             continue
     
-        #     filtered_devices.append(d)
+#         #     filtered_devices.append(d)
 
-        # if not filtered_devices:
-        #     st.info("No devices found with the selected filters")
-        #     st.stop()
+#         # if not filtered_devices:
+#         #     st.info("No devices found with the selected filters")
+#         #     st.stop()
 
-        # if filtered_devices:
-        #     if search or selected_ward != "All" or selected_room != "All":
-        #         active_filters = []
-        #         if selected_ward != "All":
-        #             active_filters.append(f"Ward: {ward_options[selected_ward]}")
-        #         if selected_room!= "All":
-        #             active_filters.append(f"Room: {room_filter_options[selected_room]}")
-        #         if search:
-        #             active_filters.append(f"Search: '{search}'")
+#         # if filtered_devices:
+#         #     if search or selected_ward != "All" or selected_room != "All":
+#         #         active_filters = []
+#         #         if selected_ward != "All":
+#         #             active_filters.append(f"Ward: {ward_options[selected_ward]}")
+#         #         if selected_room!= "All":
+#         #             active_filters.append(f"Room: {room_filter_options[selected_room]}")
+#         #         if search:
+#         #             active_filters.append(f"Search: '{search}'")
         
-        #         filter_text = " | ".join(active_filters)
-        #         st.success(f"Showing {len(filtered_devices)} device(s) with filters: {filter_text}")
-        #        # Crea lookup veloci per evitare query ripetute
-        # score_lookup = {}
-        # location_lookup = {}
+#         #         filter_text = " | ".join(active_filters)
+#         #         st.success(f"Showing {len(filtered_devices)} device(s) with filters: {filter_text}")
+#         #        # Crea lookup veloci per evitare query ripetute
+#         # score_lookup = {}
+#         # location_lookup = {}
         
-        # for row in all_devices_with_scores:
-        #     device_id = row[0]
-        #     # Salva score se presente
-        #     if row[17] is not None:  # se ha criticity_score
-        #         score_lookup[device_id] = {
-        #             'criticity_score': row[17],
-        #             'supp_score': row[18],
-        #             'miss_score': row[19],
-        #             'vulnerability_score': row[20],
-        #             'eq_function': row[21],
-        #             'age_years': row[22],
-        #             'downtime': row[23],
-        #             'assessment_date': row[24]
-        #         }
-        #     # Salva location
-        #     location_lookup[device_id] = {
-        #         'room_name': row[15],
-        #         'ward_name': row[16]
-        #     }
-        # tab1, tab2, tab3 = st.tabs(["Overview Table", "Score Analytics", "Financial Analysis"])
+#         # for row in all_devices_with_scores:
+#         #     device_id = row[0]
+#         #     # Salva score se presente
+#         #     if row[17] is not None:  # se ha criticity_score
+#         #         score_lookup[device_id] = {
+#         #             'criticity_score': row[17],
+#         #             'supp_score': row[18],
+#         #             'miss_score': row[19],
+#         #             'vulnerability_score': row[20],
+#         #             'eq_function': row[21],
+#         #             'age_years': row[22],
+#         #             'downtime': row[23],
+#         #             'assessment_date': row[24]
+#         #         }
+#         #     # Salva location
+#         #     location_lookup[device_id] = {
+#         #         'room_name': row[15],
+#         #         'ward_name': row[16]
+#         #     }
+#         # tab1, tab2, tab3 = st.tabs(["Overview Table", "Score Analytics", "Financial Analysis"])
 
-#         # LOGICA UNIFICATA - Creazione dati una sola volta
-#         df_data = []
-#         valid_scores = []
-#         device_lookup = {}
+# #         # LOGICA UNIFICATA - Creazione dati una sola volta
+# #         df_data = []
+# #         valid_scores = []
+# #         device_lookup = {}
 
-#         for d in filtered_devices:
-#             device_id, parent_id, room_id, description, device_class, usage_type, cost_inr, present, brand, model, install_date, udi, serial_number, manufacturer_date, gmdn = d
+# #         for d in filtered_devices:
+# #             device_id, parent_id, room_id, description, device_class, usage_type, cost_inr, present, brand, model, install_date, udi, serial_number, manufacturer_date, gmdn = d
 
-#             device_lookup[device_id] = {
-#                 'description': description,
-#                 'brand': brand,
-#                 'model': model,
-#                 'usage_type': usage_type,
-#                 'room_id': room_id,
-#                 'cost_inr': cost_inr,
-#                 'device_class': device_class,
-#                 'serial_number': serial_number
-#             }
+# #             device_lookup[device_id] = {
+# #                 'description': description,
+# #                 'brand': brand,
+# #                 'model': model,
+# #                 'usage_type': usage_type,
+# #                 'room_id': room_id,
+# #                 'cost_inr': cost_inr,
+# #                 'device_class': device_class,
+# #                 'serial_number': serial_number
+# #             }
 
-#             # Usa lookup invece di query
-#             score_data = score_lookup.get(device_id)
-#             breakd=get_breakdown_by_id_last(device_id)
+# #             # Usa lookup invece di query
+# #             score_data = score_lookup.get(device_id)
+# #             breakd=get_breakdown_by_id_last(device_id)
 
-#             # Calculate age_years
-#             oggi = dtm.date.today()
-#             age_years = None
-#             if manufacturer_date is not None:
-#                 age_years = (oggi - manufacturer_date).days / 365
-#             elif install_date is not None:
-#                 age_years = (oggi - install_date).days / 365
+# #             # Calculate age_years
+# #             oggi = dtm.date.today()
+# #             age_years = None
+# #             if manufacturer_date is not None:
+# #                 age_years = (oggi - manufacturer_date).days / 365
+# #             elif install_date is not None:
+# #                 age_years = (oggi - install_date).days / 365
 
-#             # *** CONTROLLO NULL PRINCIPALE - Se score è None, salta i calcoli complessi ***
-#             # *** CONTROLLO NULL PRINCIPALE - Se score_data è None, salta i calcoli complessi ***
-#             if score_data is None:
-#                 # Dispositivo senza scoring parameters - crea row con valori N/A
-#                 row_data = {
-#                     'Description': description or 'N/A',
-#                     'Brand': brand or 'N/A',
-#                     'Model': model or 'N/A',
-#                     'Fuzzy Criticity': 'N/A',
-#                     'RPV1 Criticity': 'N/A',
-#                     'Mission Score': 'N/A',
-#                     'Support Score': 'N/A',
-#                     'Age (years)': f"{age_years:.1f}" if age_years is not None else 'N/A',
-#                     'Usage Types': 'N/A',
-#                     'Current downtime (days)': 'N/A',
-#                     'Type of service': breakd[14] if breakd and breakd[14] is not None else 'N/A',
-#                     'Service supoprt': 'N/A',
-#                     'Spare parts availability': 'N/A',
-#                     'Backup Available': 'N/A',
-#                     'Ward': ward_options.get(str(next((r[3] for r in rooms if r[0] == room_id), None)), 'N/A') if room_id else 'N/A',
-#                     'Room': room_options.get(str(room_id), 'N/A') if room_id else 'N/A'
-#                 }
-#                 df_data.append(row_data)
-#                 continue  # Skip to next device
-# # *** SE ARRIVIAMO QUI, score_data NON è None ***
-#             # Ricostruisci tuple "score" per compatibilità con codice esistente
-#             score = (
-#                 None,  # parameter_id
-#                 device_id,
-#                 score_data['assessment_date'],
-#                 score_data['age_years'],
-#                 score_data['downtime'],
-#                 None,  # service_availability
-#                 None,  # spare_parts_availability
-#                 None,  # backup
-#                 score_data['eq_function'],
-#                 None,  # cumulative_maintenance
-#                 score_data['miss_score'],
-#                 score_data['supp_score'],
-#                 score_data['criticity_score']
-#             )
-#             # *** SE ARRIVIAMO QUI, score NON è None ***
-#             back = 'N/A'
-#             if score[7] is not None:
-#                 if score[7] == 2:
-#                     back = ">=3"
-#                 elif score[7] == 1:
-#                     back = "1-2"
-#                 elif score[7] == 0:
-#                     back = "0"
+# #             # *** CONTROLLO NULL PRINCIPALE - Se score è None, salta i calcoli complessi ***
+# #             # *** CONTROLLO NULL PRINCIPALE - Se score_data è None, salta i calcoli complessi ***
+# #             if score_data is None:
+# #                 # Dispositivo senza scoring parameters - crea row con valori N/A
+# #                 row_data = {
+# #                     'Description': description or 'N/A',
+# #                     'Brand': brand or 'N/A',
+# #                     'Model': model or 'N/A',
+# #                     'Fuzzy Criticity': 'N/A',
+# #                     'RPV1 Criticity': 'N/A',
+# #                     'Mission Score': 'N/A',
+# #                     'Support Score': 'N/A',
+# #                     'Age (years)': f"{age_years:.1f}" if age_years is not None else 'N/A',
+# #                     'Usage Types': 'N/A',
+# #                     'Current downtime (days)': 'N/A',
+# #                     'Type of service': breakd[14] if breakd and breakd[14] is not None else 'N/A',
+# #                     'Service supoprt': 'N/A',
+# #                     'Spare parts availability': 'N/A',
+# #                     'Backup Available': 'N/A',
+# #                     'Ward': ward_options.get(str(next((r[3] for r in rooms if r[0] == room_id), None)), 'N/A') if room_id else 'N/A',
+# #                     'Room': room_options.get(str(room_id), 'N/A') if room_id else 'N/A'
+# #                 }
+# #                 df_data.append(row_data)
+# #                 continue  # Skip to next device
+# # # *** SE ARRIVIAMO QUI, score_data NON è None ***
+# #             # Ricostruisci tuple "score" per compatibilità con codice esistente
+# #             score = (
+# #                 None,  # parameter_id
+# #                 device_id,
+# #                 score_data['assessment_date'],
+# #                 score_data['age_years'],
+# #                 score_data['downtime'],
+# #                 None,  # service_availability
+# #                 None,  # spare_parts_availability
+# #                 None,  # backup
+# #                 score_data['eq_function'],
+# #                 None,  # cumulative_maintenance
+# #                 score_data['miss_score'],
+# #                 score_data['supp_score'],
+# #                 score_data['criticity_score']
+# #             )
+# #             # *** SE ARRIVIAMO QUI, score NON è None ***
+# #             back = 'N/A'
+# #             if score[7] is not None:
+# #                 if score[7] == 2:
+# #                     back = ">=3"
+# #                 elif score[7] == 1:
+# #                     back = "1-2"
+# #                 elif score[7] == 0:
+# #                     back = "0"
     
-#             life = 'N/A'
+# #             life = 'N/A'
 
     
-#             parts = 'N/A'
-#             if score[6] is not None:
-#                 if score[6] == 0:
-#                     parts = "No"
-#                 elif score[6] == 1:
-#                     parts = "Yes"
+# #             parts = 'N/A'
+# #             if score[6] is not None:
+# #                 if score[6] == 0:
+# #                     parts = "No"
+# #                 elif score[6] == 1:
+# #                     parts = "Yes"
 
-#             eq1='N/A'
-#             if score[8] is not None:
-#                 if score[8]==1:
-#                     eq1="Analytical/Support"
-#                 elif score[8]==2:
-#                     eq1="Diagnostic"
-#                 elif score[8]==3:
-#                     eq1="Therapeutic"
-#                 elif score[8]==4:
-#                     eq1="Life Saving/Life Support"
+# #             eq1='N/A'
+# #             if score[8] is not None:
+# #                 if score[8]==1:
+# #                     eq1="Analytical/Support"
+# #                 elif score[8]==2:
+# #                     eq1="Diagnostic"
+# #                 elif score[8]==3:
+# #                     eq1="Therapeutic"
+# #                 elif score[8]==4:
+# #                     eq1="Life Saving/Life Support"
             
-#             # Calculate RPV only if all required values are not None
-#             rpv = None
-#             if score[4] is not None and score[3] is not None and score[8] is not None and score[5] is not None:
-#                 x2 = 1 if score[4] > 3 else 0
-#                 x1 = 1 if score[3] > 10 else 0
-#                 x3 = int(score[8])
-#                 x4 = 0 if score[5] == 1 else 1
-#                 rpv = 9*(x1+x2) + 7.5*x3 + 25*x4
+# #             # Calculate RPV only if all required values are not None
+# #             rpv = None
+# #             if score[4] is not None and score[3] is not None and score[8] is not None and score[5] is not None:
+# #                 x2 = 1 if score[4] > 3 else 0
+# #                 x1 = 1 if score[3] > 10 else 0
+# #                 x3 = int(score[8])
+# #                 x4 = 0 if score[5] == 1 else 1
+# #                 rpv = 9*(x1+x2) + 7.5*x3 + 25*x4
 
-#             # Aggiungi a valid_scores se ha score record (anche con NULL)
-#             # Questo serve per le altre analisi (operational, financial)
-#             valid_scores.append((device_id, score, age_years, cost_inr))
+# #             # Aggiungi a valid_scores se ha score record (anche con NULL)
+# #             # Questo serve per le altre analisi (operational, financial)
+# #             valid_scores.append((device_id, score, age_years, cost_inr))
 
-#             row_data = {
-#                 'Description': description or 'N/A',
-#                 'Brand': brand or 'N/A',
-#                 'Model': model or 'N/A',
-#                 'Serial number': serial_number or 'N/A',
-#                 'Fuzzy Criticity': round(score[12], 2) if score[12] is not None else 'N/A',
-#                 'RPV1 Criticity': rpv if rpv is not None else 'N/A',
-#                 'Mission Score': round(score[10], 2) if score[10] is not None else 'N/A',
-#                 'Support Score': round(score[11], 2) if score[11] is not None else 'N/A',
-#                 'Age (years)': f"{score[3]:.1f}" if score[3] is not None else 'N/A',
-#                 'Usage Types': eq1 or "N/A",
-#                 'Current downtime (days)': round(score[4], 1) if score[4] is not None else 'N/A',
-#                 'Type of service': breakd[14] if breakd and breakd[14] is not None else 'N/A',
-#                 'Service supoprt': 'Yes' if score[5] == 1 else 'No' if score[5] is not None else 'N/A',
-#                 'Spare parts availability': 'Yes' if score[6] == 1 else 'No' if score[6] is not None else 'N/A',
-#                 'Backup Available': back,
-#                 'Ward': location_lookup.get(device_id, {}).get('ward_name', 'N/A'),
-#                 'Room': location_lookup.get(device_id, {}).get('room_name', 'N/A')
-#             }
+# #             row_data = {
+# #                 'Description': description or 'N/A',
+# #                 'Brand': brand or 'N/A',
+# #                 'Model': model or 'N/A',
+# #                 'Serial number': serial_number or 'N/A',
+# #                 'Fuzzy Criticity': round(score[12], 2) if score[12] is not None else 'N/A',
+# #                 'RPV1 Criticity': rpv if rpv is not None else 'N/A',
+# #                 'Mission Score': round(score[10], 2) if score[10] is not None else 'N/A',
+# #                 'Support Score': round(score[11], 2) if score[11] is not None else 'N/A',
+# #                 'Age (years)': f"{score[3]:.1f}" if score[3] is not None else 'N/A',
+# #                 'Usage Types': eq1 or "N/A",
+# #                 'Current downtime (days)': round(score[4], 1) if score[4] is not None else 'N/A',
+# #                 'Type of service': breakd[14] if breakd and breakd[14] is not None else 'N/A',
+# #                 'Service supoprt': 'Yes' if score[5] == 1 else 'No' if score[5] is not None else 'N/A',
+# #                 'Spare parts availability': 'Yes' if score[6] == 1 else 'No' if score[6] is not None else 'N/A',
+# #                 'Backup Available': back,
+# #                 'Ward': location_lookup.get(device_id, {}).get('ward_name', 'N/A'),
+# #                 'Room': location_lookup.get(device_id, {}).get('room_name', 'N/A')
+# #             }
 
-#             df_data.append(row_data)
+# #             df_data.append(row_data)
 
 
-        # with tab1:
-        #     try:
-        #         cur.execute("SELECT COUNT(*) FROM scoring_parameters")
-        #         scoring_count = cur.fetchone()[0]
+#         # with tab1:
+#         #     try:
+#         #         cur.execute("SELECT COUNT(*) FROM scoring_parameters")
+#         #         scoring_count = cur.fetchone()[0]
 
-        #         if scoring_count > 0:
+#         #         if scoring_count > 0:
                     
 
-        #             # Ora crea le colonne - il CSS si applicherà alle metriche
-        #             col1, col2 = st.columns(2)
+#         #             # Ora crea le colonne - il CSS si applicherà alle metriche
+#         #             col1, col2 = st.columns(2)
 
-        #             with col1:
-        #                 high_risk_count = 0
-        #                 for d in filtered_devices:
-        #                     device_id = d[0]
-        #                     score_data = score_lookup.get(device_id)
-        #                     if score_data and score_data['criticity_score'] is not None and score_data['criticity_score'] > 6:
-        #                         high_risk_count += 1
+#         #             with col1:
+#         #                 high_risk_count = 0
+#         #                 for d in filtered_devices:
+#         #                     device_id = d[0]
+#         #                     score_data = score_lookup.get(device_id)
+#         #                     if score_data and score_data['criticity_score'] is not None and score_data['criticity_score'] > 6:
+#         #                         high_risk_count += 1
     
-        #                 st.metric("High Risk Devices", value=high_risk_count,
-        #                            delta="⚠️ Need Action" if high_risk_count > 0 else "✅ All Good",delta_color="inverse")
+#         #                 st.metric("High Risk Devices", value=high_risk_count,
+#         #                            delta="⚠️ Need Action" if high_risk_count > 0 else "✅ All Good",delta_color="inverse")
 
-        #             with col2:
-        #                 # Conta solo dispositivi con score effettivamente calcolati (criticity_score non NULL)
-        #                 analyzed_devices = 0
-        #                 for d in filtered_devices:
-        #                     device_id = d[0]
-        #                     score_data = score_lookup.get(device_id)
-        #                     if score_data and score_data['criticity_score'] is not None:
-        #                         analyzed_devices += 1
+#         #             with col2:
+#         #                 # Conta solo dispositivi con score effettivamente calcolati (criticity_score non NULL)
+#         #                 analyzed_devices = 0
+#         #                 for d in filtered_devices:
+#         #                     device_id = d[0]
+#         #                     score_data = score_lookup.get(device_id)
+#         #                     if score_data and score_data['criticity_score'] is not None:
+#         #                         analyzed_devices += 1
                         
-        #                 total_devices = len(filtered_devices)
-        #                 coverage = (analyzed_devices / total_devices) * 100 if total_devices > 0 else 0
-        #                 st.metric("Analysis Coverage", f"{coverage:.1f}%", 
-        #                             delta=f"{analyzed_devices}/{total_devices} devices")
+#         #                 total_devices = len(filtered_devices)
+#         #                 coverage = (analyzed_devices / total_devices) * 100 if total_devices > 0 else 0
+#         #                 st.metric("Analysis Coverage", f"{coverage:.1f}%", 
+#         #                             delta=f"{analyzed_devices}/{total_devices} devices")
 
-        #         else:
-        #             st.warning("⚠️ No fuzzy logic results found. Run analysis in 'Scoring Assessment' page first.")
+#         #         else:
+#         #             st.warning("⚠️ No fuzzy logic results found. Run analysis in 'Scoring Assessment' page first.")
 
-        #     except Exception as e:
-        #         st.error(f"Error checking scoring data: {e}")
+#         #     except Exception as e:
+#         #         st.error(f"Error checking scoring data: {e}")
                 
-        #     df = pd.DataFrame(df_data)
-        #     # Converti i valori numerici da string a float per il coloring
-        #     # Helper function per conversione sicura a float
-        #     def safe_float(val):
-        #         """Converte in float solo se possibile, altrimenti ritorna None"""
-        #         if val == 'N/A' or val is None:
-        #             return None
-        #         try:
-        #             return float(val)
-        #         except (ValueError, TypeError):
-        #             return None
+#         #     df = pd.DataFrame(df_data)
+#         #     # Converti i valori numerici da string a float per il coloring
+#         #     # Helper function per conversione sicura a float
+#         #     def safe_float(val):
+#         #         """Converte in float solo se possibile, altrimenti ritorna None"""
+#         #         if val == 'N/A' or val is None:
+#         #             return None
+#         #         try:
+#         #             return float(val)
+#         #         except (ValueError, TypeError):
+#         #             return None
 
-        #     styled_df = df.style.applymap(
-        #         lambda val: (
-        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 8 else
-        #             'background-color: #fff2e6' if safe_float(val) is not None and safe_float(val) >= 6 else
-        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 4 else
-        #             'background-color: #f0fff0' if safe_float(val) is not None and safe_float(val) >= 2 else
-        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
-        #             ''  # Per 'N/A'
-        #         ),
-        #         subset=['Fuzzy Criticity']
-        #     ).applymap(
-        #         lambda val: (
-        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 50 else
-        #             'background-color: #fff2e6' if safe_float(val) is not None and safe_float(val) >= 40 else
-        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 30 else
-        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
-        #             ''  # Per 'N/A'
-        #         ),
-        #         subset=['RPV1 Criticity']
-        #     ).applymap(
-        #         lambda val: (
-        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 20 else
-        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 10 else
-        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
-        #             ''  # Per 'N/A'
-        #         ),
-        #         subset=['Mission Score']
-        #     ).applymap(
-        #         lambda val: (
-        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 6.5 else
-        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 3.5 else
-        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 0 else
-        #             ''  # Per 'N/A'
-        #         ),
-        #         subset=['Support Score']
-        #     ).applymap(
-        #         lambda val: (
-        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 10 else      
-        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 5 else
-        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
-        #             ''  # Per 'N/A'
-        #         ),
-        #         subset=['Age (years)']
-        #     ).applymap(
-        #         lambda val: (
-        #             'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == 'End of Support' else                
-        #             'background-color: #fffff0' if val != 'N/A' and val == 'End of Life' else
-        #             'background-color: #e6ffe6' if val != 'N/A' and val == '0' else
-        #             ''  # Per 'N/A'
-        #         ),
-        #         subset=['Usage Types']
-        #     ).applymap(
-        #         lambda val: (
-        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) > 3 else      
-        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) > 1 else
-        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
-        #             ''  # Per 'N/A'
-        #         ),
-        #         subset=['Current downtime (days)']
-        #     ).applymap(
-        #         lambda val: (
-        #             'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == '0' else                
-        #             'background-color: #f0fff0' if val != 'N/A' and val == '1-2' else
-        #             'background-color: #e6ffe6' if val != 'N/A' and val == '>=3' else
-        #             ''  # Per 'N/A'
-        #         ),
-        #         subset=['Backup Available']
-        #     ).applymap(
-        #         lambda val: (
-        #             'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == 'Imported and NO avalability of spare parts' else                
-        #             'background-color: #fffff0' if val != 'N/A' and val == 'Local production and NO avalability of spare parts' else
-        #             'background-color: #f0fff0' if val != 'N/A' and val == 'Imported and avalability of spare parts' else
-        #             'background-color: #e6ffe6' if val != 'N/A' and val == 'Local production and avalability of spare parts' else
-        #             ''  # Per 'N/A'
-        #         ),
-        #     )
-
-
-        #     st.dataframe(styled_df, use_container_width=True, hide_index=True)
-
-        #     # Crea un buffer in memoria
-        #     buffer = BytesIO()
-        #     with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
-        #         df.to_excel(writer, index=False, sheet_name='Device Analysis')
-        #     buffer.seek(0)
-
-        #     st.download_button(
-        #         label="📥 Export to Excel",
-        #         data=buffer.getvalue(),
-        #         file_name=f"device_analysis_{dtm.date.today()}.xlsx",
-        #         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        #     )
+#         #     styled_df = df.style.applymap(
+#         #         lambda val: (
+#         #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 8 else
+#         #             'background-color: #fff2e6' if safe_float(val) is not None and safe_float(val) >= 6 else
+#         #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 4 else
+#         #             'background-color: #f0fff0' if safe_float(val) is not None and safe_float(val) >= 2 else
+#         #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
+#         #             ''  # Per 'N/A'
+#         #         ),
+#         #         subset=['Fuzzy Criticity']
+#         #     ).applymap(
+#         #         lambda val: (
+#         #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 50 else
+#         #             'background-color: #fff2e6' if safe_float(val) is not None and safe_float(val) >= 40 else
+#         #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 30 else
+#         #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
+#         #             ''  # Per 'N/A'
+#         #         ),
+#         #         subset=['RPV1 Criticity']
+#         #     ).applymap(
+#         #         lambda val: (
+#         #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 20 else
+#         #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 10 else
+#         #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
+#         #             ''  # Per 'N/A'
+#         #         ),
+#         #         subset=['Mission Score']
+#         #     ).applymap(
+#         #         lambda val: (
+#         #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 6.5 else
+#         #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 3.5 else
+#         #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 0 else
+#         #             ''  # Per 'N/A'
+#         #         ),
+#         #         subset=['Support Score']
+#         #     ).applymap(
+#         #         lambda val: (
+#         #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 10 else      
+#         #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 5 else
+#         #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
+#         #             ''  # Per 'N/A'
+#         #         ),
+#         #         subset=['Age (years)']
+#         #     ).applymap(
+#         #         lambda val: (
+#         #             'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == 'End of Support' else                
+#         #             'background-color: #fffff0' if val != 'N/A' and val == 'End of Life' else
+#         #             'background-color: #e6ffe6' if val != 'N/A' and val == '0' else
+#         #             ''  # Per 'N/A'
+#         #         ),
+#         #         subset=['Usage Types']
+#         #     ).applymap(
+#         #         lambda val: (
+#         #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) > 3 else      
+#         #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) > 1 else
+#         #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
+#         #             ''  # Per 'N/A'
+#         #         ),
+#         #         subset=['Current downtime (days)']
+#         #     ).applymap(
+#         #         lambda val: (
+#         #             'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == '0' else                
+#         #             'background-color: #f0fff0' if val != 'N/A' and val == '1-2' else
+#         #             'background-color: #e6ffe6' if val != 'N/A' and val == '>=3' else
+#         #             ''  # Per 'N/A'
+#         #         ),
+#         #         subset=['Backup Available']
+#         #     ).applymap(
+#         #         lambda val: (
+#         #             'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == 'Imported and NO avalability of spare parts' else                
+#         #             'background-color: #fffff0' if val != 'N/A' and val == 'Local production and NO avalability of spare parts' else
+#         #             'background-color: #f0fff0' if val != 'N/A' and val == 'Imported and avalability of spare parts' else
+#         #             'background-color: #e6ffe6' if val != 'N/A' and val == 'Local production and avalability of spare parts' else
+#         #             ''  # Per 'N/A'
+#         #         ),
+#         #     )
 
 
-        # with tab2:
-        #     if valid_scores:
-        #         col1, col2, col3 = st.columns(3)
+#         #     st.dataframe(styled_df, use_container_width=True, hide_index=True)
 
-        #         criticities = []
-        #         mission_scores = []
-        #         support_scores = []
+#         #     # Crea un buffer in memoria
+#         #     buffer = BytesIO()
+#         #     with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+#         #         df.to_excel(writer, index=False, sheet_name='Device Analysis')
+#         #     buffer.seek(0)
+
+#         #     st.download_button(
+#         #         label="📥 Export to Excel",
+#         #         data=buffer.getvalue(),
+#         #         file_name=f"device_analysis_{dtm.date.today()}.xlsx",
+#         #         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+#         #     )
+
+
+#         # with tab2:
+#         #     if valid_scores:
+#         #         col1, col2, col3 = st.columns(3)
+
+#         #         criticities = []
+#         #         mission_scores = []
+#         #         support_scores = []
         
-        #         for d in filtered_devices:
-        #             device_id = d[0]
-        #             score_data = score_lookup.get(device_id)
-        #             if score_data:
-        #                 if score_data['criticity_score'] is not None:
-        #                     criticities.append(score_data['criticity_score'])
-        #                 if score_data['miss_score'] is not None:
-        #                     mission_scores.append(score_data['miss_score'])
-        #                 if score_data['supp_score'] is not None:
-        #                     support_scores.append(score_data['supp_score'])
+#         #         for d in filtered_devices:
+#         #             device_id = d[0]
+#         #             score_data = score_lookup.get(device_id)
+#         #             if score_data:
+#         #                 if score_data['criticity_score'] is not None:
+#         #                     criticities.append(score_data['criticity_score'])
+#         #                 if score_data['miss_score'] is not None:
+#         #                     mission_scores.append(score_data['miss_score'])
+#         #                 if score_data['supp_score'] is not None:
+#         #                     support_scores.append(score_data['supp_score'])
 
-        #         with col1:
-        #             if criticities:
-        #                 avg_criticality = sum(criticities) / len(criticities)
-        #                 st.metric("Average Criticity", f"{avg_criticality:.2f}")
-        #             else:
-        #                 st.metric("Average Criticity", "N/A")
+#         #         with col1:
+#         #             if criticities:
+#         #                 avg_criticality = sum(criticities) / len(criticities)
+#         #                 st.metric("Average Criticity", f"{avg_criticality:.2f}")
+#         #             else:
+#         #                 st.metric("Average Criticity", "N/A")
 
-        #         with col2:
-        #             if mission_scores:
-        #                 avg_mission = sum(mission_scores) / len(mission_scores)
-        #                 st.metric("Average Mission Score", f"{avg_mission:.2f}")
-        #             else:
-        #                 st.metric("Average Mission Score", "N/A")
+#         #         with col2:
+#         #             if mission_scores:
+#         #                 avg_mission = sum(mission_scores) / len(mission_scores)
+#         #                 st.metric("Average Mission Score", f"{avg_mission:.2f}")
+#         #             else:
+#         #                 st.metric("Average Mission Score", "N/A")
 
-        #         with col3:
-        #             if support_scores:
-        #                 avg_support = sum(support_scores) / len(support_scores)
-        #                 st.metric("Average Support Score", f"{avg_support:.2f}")
-        #             else:
-        #                 st.metric("Average Support Score", "N/A")
-        #         st.divider()
-        #         chart_col1, chart_col2 = st.columns(2)
+#         #         with col3:
+#         #             if support_scores:
+#         #                 avg_support = sum(support_scores) / len(support_scores)
+#         #                 st.metric("Average Support Score", f"{avg_support:.2f}")
+#         #             else:
+#         #                 st.metric("Average Support Score", "N/A")
+#         #         st.divider()
+#         #         chart_col1, chart_col2 = st.columns(2)
 
-        #         with chart_col1:
+#         #         with chart_col1:
                         
-        #             criticities = []
-        #             for d in filtered_devices:
-        #                 device_id = d[0]
-        #                 score_data = score_lookup.get(device_id)
-        #                 if score_data and score_data['criticity_score'] is not None:
-        #                     criticities.append(score_data['criticity_score'])
+#         #             criticities = []
+#         #             for d in filtered_devices:
+#         #                 device_id = d[0]
+#         #                 score_data = score_lookup.get(device_id)
+#         #                 if score_data and score_data['criticity_score'] is not None:
+#         #                     criticities.append(score_data['criticity_score'])
     
-        #             if criticities:
-        #                 criticity_ranges = {
-        #                     "Very Low (0-2)": sum(1 for c in criticities if 0 <= c <= 2),
-        #                     "Low (2-4)": sum(1 for c in criticities if 2 <= c <= 4),
-        #                     "Medium (4-6)": sum(1 for c in criticities if 4 < c <= 6),
-        #                     "High (6-8)": sum(1 for c in criticities if 6 < c <= 8),
-        #                     "Very High (8-10)": sum(1 for c in criticities if 8 < c <= 10)
-        #                 }
+#         #             if criticities:
+#         #                 criticity_ranges = {
+#         #                     "Very Low (0-2)": sum(1 for c in criticities if 0 <= c <= 2),
+#         #                     "Low (2-4)": sum(1 for c in criticities if 2 <= c <= 4),
+#         #                     "Medium (4-6)": sum(1 for c in criticities if 4 < c <= 6),
+#         #                     "High (6-8)": sum(1 for c in criticities if 6 < c <= 8),
+#         #                     "Very High (8-10)": sum(1 for c in criticities if 8 < c <= 10)
+#         #                 }
         
-        #                 # Rimuovi categorie con valore 0 per il grafico a torta
-        #                 criticity_ranges = {k: v for k, v in criticity_ranges.items() if v > 0}
+#         #                 # Rimuovi categorie con valore 0 per il grafico a torta
+#         #                 criticity_ranges = {k: v for k, v in criticity_ranges.items() if v > 0}
         
-        #                 fig = go.Figure(data=[
-        #                     go.Pie(
-        #                         labels=list(criticity_ranges.keys()),
-        #                         values=list(criticity_ranges.values()),
-        #                         marker_colors=['#1a9641','#a6d96a', '#ffffbf', '#fdae61', '#d7191c'][:len(criticity_ranges)],
-        #                         textinfo='label+value+percent',
-        #                         textposition='auto',
-        #                         hovertemplate='<b>%{label}</b><br>Devices: %{value}<br>Percentage: %{percent}<extra></extra>'
-        #                     )
-        #                 ])
+#         #                 fig = go.Figure(data=[
+#         #                     go.Pie(
+#         #                         labels=list(criticity_ranges.keys()),
+#         #                         values=list(criticity_ranges.values()),
+#         #                         marker_colors=['#1a9641','#a6d96a', '#ffffbf', '#fdae61', '#d7191c'][:len(criticity_ranges)],
+#         #                         textinfo='label+value+percent',
+#         #                         textposition='auto',
+#         #                         hovertemplate='<b>%{label}</b><br>Devices: %{value}<br>Percentage: %{percent}<extra></extra>'
+#         #                     )
+#         #                 ])
         
-        #                 fig.update_layout(
-        #                     title="Criticity Distribution",
-        #                     height=400,
-        #                     showlegend=True,
-        #                     legend=dict(
-        #                         orientation="v",
-        #                         yanchor="middle",
-        #                         y=0.5,
-        #                         xanchor="left",
-        #                         x=1.01
-        #                     )
-        #                 )
+#         #                 fig.update_layout(
+#         #                     title="Criticity Distribution",
+#         #                     height=400,
+#         #                     showlegend=True,
+#         #                     legend=dict(
+#         #                         orientation="v",
+#         #                         yanchor="middle",
+#         #                         y=0.5,
+#         #                         xanchor="left",
+#         #                         x=1.01
+#         #                     )
+#         #                 )
         
-        #                 st.plotly_chart(fig, use_container_width=True)
-        #             else:
-        #                 st.info("No criticity data available")
+#         #                 st.plotly_chart(fig, use_container_width=True)
+#         #             else:
+#         #                 st.info("No criticity data available")
 
-        #         with chart_col2:
-        #             st.write("**High & Very High Risk Devices**")
-        #             high_risk_devices = []
+#         #         with chart_col2:
+#         #             st.write("**High & Very High Risk Devices**")
+#         #             high_risk_devices = []
 
-        #             for d in filtered_devices:
-        #                 device_id = d[0]
-        #                 score_data = score_lookup.get(device_id)
-        #                 location = location_lookup.get(device_id, {})
+#         #             for d in filtered_devices:
+#         #                 device_id = d[0]
+#         #                 score_data = score_lookup.get(device_id)
+#         #                 location = location_lookup.get(device_id, {})
                         
-        #                 if score_data and score_data['criticity_score'] is not None and score_data['criticity_score'] > 6.0:
-        #                     device_info = device_lookup.get(device_id, {})
-        #                     device_name = device_info.get('description', 'Unknown Device')
+#         #                 if score_data and score_data['criticity_score'] is not None and score_data['criticity_score'] > 6.0:
+#         #                     device_info = device_lookup.get(device_id, {})
+#         #                     device_name = device_info.get('description', 'Unknown Device')
                             
-        #                     high_risk_devices.append({
-        #                         'Device description': device_name,
-        #                         'Serial Number': device_info.get('serial_number','N/A'),
-        #                         'Criticity': round(score_data['criticity_score'], 2),                              
-        #                         'Location': f"{location.get('room_name', 'N/A')} - {location.get('ward_name', 'N/A')}"
-        #                     })
+#         #                     high_risk_devices.append({
+#         #                         'Device description': device_name,
+#         #                         'Serial Number': device_info.get('serial_number','N/A'),
+#         #                         'Criticity': round(score_data['criticity_score'], 2),                              
+#         #                         'Location': f"{location.get('room_name', 'N/A')} - {location.get('ward_name', 'N/A')}"
+#         #                     })
 
-        #             if high_risk_devices:
-        #                 risk_df = pd.DataFrame(high_risk_devices)
+#         #             if high_risk_devices:
+#         #                 risk_df = pd.DataFrame(high_risk_devices)
 
-        #                 def highlight_criticity(val):
-        #                     if val == "N/A":
-        #                         return ''
-        #                     try:
-        #                         v = float(val)
-        #                     except:
-        #                         return ''
-        #                     if v >= 8:
-        #                         return 'background-color: #ffe6e6; color: #cc0000'  # rosso
-        #                     elif v >= 6:
-        #                         return 'background-color: #fff2e6'  # arancio
-        #                     elif v >= 4:
-        #                         return 'background-color: #fffff0'  # giallo
-        #                     elif v >= 2:
-        #                         return 'background-color: #f0fff0'  # verde chiaro
-        #                     elif v >= 0:
-        #                         return 'background-color: #e6ffe6'  # verde scuro
-        #                     return ''
+#         #                 def highlight_criticity(val):
+#         #                     if val == "N/A":
+#         #                         return ''
+#         #                     try:
+#         #                         v = float(val)
+#         #                     except:
+#         #                         return ''
+#         #                     if v >= 8:
+#         #                         return 'background-color: #ffe6e6; color: #cc0000'  # rosso
+#         #                     elif v >= 6:
+#         #                         return 'background-color: #fff2e6'  # arancio
+#         #                     elif v >= 4:
+#         #                         return 'background-color: #fffff0'  # giallo
+#         #                     elif v >= 2:
+#         #                         return 'background-color: #f0fff0'  # verde chiaro
+#         #                     elif v >= 0:
+#         #                         return 'background-color: #e6ffe6'  # verde scuro
+#         #                     return ''
                         
-        #                 styled_df = risk_df.style.applymap(highlight_criticity, subset=['Criticity'])
+#         #                 styled_df = risk_df.style.applymap(highlight_criticity, subset=['Criticity'])
                         
-        #                 st.dataframe(styled_df, hide_index=True, use_container_width=True)
-        #                 st.warning(f"⚠️ {len(high_risk_devices)} devices require attention!")
+#         #                 st.dataframe(styled_df, hide_index=True, use_container_width=True)
+#         #                 st.warning(f"⚠️ {len(high_risk_devices)} devices require attention!")
 
-        #             else:
-        #                 st.success("✅ No high-risk devices found!")
+#         #             else:
+#         #                 st.success("✅ No high-risk devices found!")
 
 
                 
-        #     st.divider()
+#         #     st.divider()
 
-        #     def categorize_device_by_type(description):
-        #         if not description:
-        #             return 'Other'
+#         #     def categorize_device_by_type(description):
+#         #         if not description:
+#         #             return 'Other'
 
-        #         desc_lower = description.lower()
+#         #         desc_lower = description.lower()
 
-        #         if any(keyword in desc_lower for keyword in ['monitor', 'monitoring', 'display', 'screen']):
-        #             return 'Monitor'
-        #         elif any(keyword in desc_lower for keyword in ['ecg', 'ekg', 'electrocardiogram', 'cardiac']):
-        #             return 'ECG'
-        #         elif any(keyword in desc_lower for keyword in ['ventilator', 'ventilation', 'breathing', 'respiratory']):
-        #             return 'Ventilator'
-        #         elif any(keyword in desc_lower for keyword in ['light', 'lamp', 'illumination', 'surgical light', 'ot light', 'operating']):
-        #             return 'OT Light'
-        #         elif any(keyword in desc_lower for keyword in ['pump', 'infusion', 'syringe']):
-        #             return 'Pump'
-        #         elif any(keyword in desc_lower for keyword in ['ultrasound', 'echo', 'doppler']):
-        #             return 'Ultrasound'
-        #         elif any(keyword in desc_lower for keyword in ['xray', 'x-ray', 'radiograph']):
-        #             return 'X-Ray'
-        #         elif any(keyword in desc_lower for keyword in ['defibrillator', 'defib']):
-        #             return 'Defibrillator'
-        #         else:
-        #             return 'Other'
-
-
-        #     # INIZIALIZZA LE VARIABILI
-        #     detailed_device_data = {}
-        #     device_data = {}
-
-        #     # Raccogli dati dettagliati per dispositivo
-        #     for d in filtered_devices:
-        #         device_id = d[0]
-        #         description = d[3] or 'Unknown'
-        #         brand = d[8] or 'N/A'
-        #         model = d[9] or 'N/A'
-        #         serial_number=d[12] or 'N/A'
-        #         score_data = score_lookup.get(device_id)
-
-        #         device_type = categorize_device_by_type(description)
-
-        #         if device_type not in device_data:
-        #             device_data[device_type] = {
-        #                 'total': 0, 'very_low': 0, 'low': 0,
-        #                 'medium': 0, 'high': 0, 'very_high': 0
-        #             }
-        #             detailed_device_data[device_type] = {
-        #                 'very_low': [], 'low': [], 'medium': [], 'high': [], 'very_high': []
-        #             }
-
-        #         device_data[device_type]['total'] += 1
-
-        #         if score_data and score_data['criticity_score'] is not None:
-        #             location = location_lookup.get(device_id, {})
-        #             roomname = location.get('room_name', 'N/A')
-        #             wardname = location.get('ward_name', 'N/A')
-        #             criticity_score = score_data['criticity_score']
-        #             device_info = {
-        #                 'id': device_id,
-        #                 'description': description,
-        #                 'serial number': serial_number,
-        #                 'brand': brand,
-        #                 'room': roomname,
-        #                 'ward': wardname,
-        #                 'model': model,
-        #                 'criticity': round(criticity_score, 2)
-        #             }
-
-        #             if 0 <= criticity_score <= 2:
-        #                 device_data[device_type]['very_low'] += 1
-        #                 detailed_device_data[device_type]['very_low'].append(device_info)
-        #             elif 2 < criticity_score <= 4:
-        #                 device_data[device_type]['low'] += 1
-        #                 detailed_device_data[device_type]['low'].append(device_info)
-        #             elif 4 < criticity_score <= 6:
-        #                 device_data[device_type]['medium'] += 1
-        #                 detailed_device_data[device_type]['medium'].append(device_info)
-        #             elif 6 < criticity_score <= 8:
-        #                 device_data[device_type]['high'] += 1
-        #                 detailed_device_data[device_type]['high'].append(device_info)
-        #             elif 8 < criticity_score <= 10:
-        #                 device_data[device_type]['very_high'] += 1
-        #                 detailed_device_data[device_type]['very_high'].append(device_info)
+#         #         if any(keyword in desc_lower for keyword in ['monitor', 'monitoring', 'display', 'screen']):
+#         #             return 'Monitor'
+#         #         elif any(keyword in desc_lower for keyword in ['ecg', 'ekg', 'electrocardiogram', 'cardiac']):
+#         #             return 'ECG'
+#         #         elif any(keyword in desc_lower for keyword in ['ventilator', 'ventilation', 'breathing', 'respiratory']):
+#         #             return 'Ventilator'
+#         #         elif any(keyword in desc_lower for keyword in ['light', 'lamp', 'illumination', 'surgical light', 'ot light', 'operating']):
+#         #             return 'OT Light'
+#         #         elif any(keyword in desc_lower for keyword in ['pump', 'infusion', 'syringe']):
+#         #             return 'Pump'
+#         #         elif any(keyword in desc_lower for keyword in ['ultrasound', 'echo', 'doppler']):
+#         #             return 'Ultrasound'
+#         #         elif any(keyword in desc_lower for keyword in ['xray', 'x-ray', 'radiograph']):
+#         #             return 'X-Ray'
+#         #         elif any(keyword in desc_lower for keyword in ['defibrillator', 'defib']):
+#         #             return 'Defibrillator'
+#         #         else:
+#         #             return 'Other'
 
 
-        #     # VISUALIZZAZIONE
-        #     if device_data:
-        #         risk_levels = ['very_high', 'high', 'medium', 'low', 'very_low']
-        #         risk_names = {
-        #             'very_high': 'Very High Risk (8-10)',
-        #             'high': 'High Risk (6-8)',
-        #             'medium': 'Medium Risk (4-6)',
-        #             'low': 'Low Risk (2-4)',
-        #             'very_low': 'Very Low Risk (0-2)'
-        #         }
-        #         colors = {
-        #             'very_high': '#d7191c',   # rosso intenso
-        #             'high': '#fdae61',        # arancio
-        #             'medium': "#ffffbf",      # giallo chiaro
-        #             'low': '#a6d96a',         # verde chiaro
-        #             'very_low': '#1a9641'     # verde scuro
-        #         }
+#         #     # INIZIALIZZA LE VARIABILI
+#         #     detailed_device_data = {}
+#         #     device_data = {}
 
-        #         device_types = list(device_data.keys())
+#         #     # Raccogli dati dettagliati per dispositivo
+#         #     for d in filtered_devices:
+#         #         device_id = d[0]
+#         #         description = d[3] or 'Unknown'
+#         #         brand = d[8] or 'N/A'
+#         #         model = d[9] or 'N/A'
+#         #         serial_number=d[12] or 'N/A'
+#         #         score_data = score_lookup.get(device_id)
 
-        #         fig = go.Figure()
+#         #         device_type = categorize_device_by_type(description)
 
-        #         for risk_level in risk_levels:
-        #             # Prepara hover con lista dispositivi
-        #             hover_texts = []
-        #             for dt in device_types:
-        #                 devices = detailed_device_data[dt][risk_level]
-        #                 if devices:
-        #                     details = "<br>".join([f"- {dev['description']} ({dev['brand']} {dev['model']})"
-        #                                         for dev in devices[:5]])  # max 5 per non fare muro di testo
-        #                     if len(devices) > 5:
-        #                         details += f"<br>...and {len(devices)-5} more"
-        #                     hover_texts.append(details)
-        #                 else:
-        #                     hover_texts.append("No devices")
+#         #         if device_type not in device_data:
+#         #             device_data[device_type] = {
+#         #                 'total': 0, 'very_low': 0, 'low': 0,
+#         #                 'medium': 0, 'high': 0, 'very_high': 0
+#         #             }
+#         #             detailed_device_data[device_type] = {
+#         #                 'very_low': [], 'low': [], 'medium': [], 'high': [], 'very_high': []
+#         #             }
 
-        #             fig.add_trace(go.Bar(
-        #                 name=risk_names[risk_level],
-        #                 y=device_types,
-        #                 x=[device_data[dt][risk_level] for dt in device_types],
-        #                 orientation='h',
-        #                 marker_color=colors[risk_level],
-        #                 text=[device_data[dt][risk_level] if device_data[dt][risk_level] > 0 else '' for dt in device_types],
-        #                 textposition="inside",
-        #                 hovertext=hover_texts,
-        #                 hoverinfo="text+x+name"
-        #             ))
+#         #         device_data[device_type]['total'] += 1
 
-        #         fig.update_layout(
-        #             title="Criticity Analysis by Device Type",
-        #             barmode='stack',
-        #             height=600,
-        #             yaxis=dict(title="Device Type", automargin=True),
-        #             xaxis=dict(title="Number of Devices"),
-        #             legend=dict(
-        #                 orientation="h",
-        #                 yanchor="bottom",
-        #                 y=1.02,
-        #                 xanchor="center",
-        #                 x=0.5
-        #             ),
-        #             plot_bgcolor="white",
-        #             paper_bgcolor="white"
-        #         )
+#         #         if score_data and score_data['criticity_score'] is not None:
+#         #             location = location_lookup.get(device_id, {})
+#         #             roomname = location.get('room_name', 'N/A')
+#         #             wardname = location.get('ward_name', 'N/A')
+#         #             criticity_score = score_data['criticity_score']
+#         #             device_info = {
+#         #                 'id': device_id,
+#         #                 'description': description,
+#         #                 'serial number': serial_number,
+#         #                 'brand': brand,
+#         #                 'room': roomname,
+#         #                 'ward': wardname,
+#         #                 'model': model,
+#         #                 'criticity': round(criticity_score, 2)
+#         #             }
 
-        #         st.plotly_chart(fig, use_container_width=True)
+#         #             if 0 <= criticity_score <= 2:
+#         #                 device_data[device_type]['very_low'] += 1
+#         #                 detailed_device_data[device_type]['very_low'].append(device_info)
+#         #             elif 2 < criticity_score <= 4:
+#         #                 device_data[device_type]['low'] += 1
+#         #                 detailed_device_data[device_type]['low'].append(device_info)
+#         #             elif 4 < criticity_score <= 6:
+#         #                 device_data[device_type]['medium'] += 1
+#         #                 detailed_device_data[device_type]['medium'].append(device_info)
+#         #             elif 6 < criticity_score <= 8:
+#         #                 device_data[device_type]['high'] += 1
+#         #                 detailed_device_data[device_type]['high'].append(device_info)
+#         #             elif 8 < criticity_score <= 10:
+#         #                 device_data[device_type]['very_high'] += 1
+#         #                 detailed_device_data[device_type]['very_high'].append(device_info)
 
-        #         # --- Dettagli con selectbox
-        #         st.write("### Explore Device Details")
 
-        #         col1, col2 = st.columns(2)
-        #         with col1:
-        #             selected_type = st.selectbox(
-        #                 "Select Device Type:",
-        #                 options=list(device_data.keys()),
-        #                 key="device_type_select_chart1"
-        #             )
+#         #     # VISUALIZZAZIONE
+#         #     if device_data:
+#         #         risk_levels = ['very_high', 'high', 'medium', 'low', 'very_low']
+#         #         risk_names = {
+#         #             'very_high': 'Very High Risk (8-10)',
+#         #             'high': 'High Risk (6-8)',
+#         #             'medium': 'Medium Risk (4-6)',
+#         #             'low': 'Low Risk (2-4)',
+#         #             'very_low': 'Very Low Risk (0-2)'
+#         #         }
+#         #         colors = {
+#         #             'very_high': '#d7191c',   # rosso intenso
+#         #             'high': '#fdae61',        # arancio
+#         #             'medium': "#ffffbf",      # giallo chiaro
+#         #             'low': '#a6d96a',         # verde chiaro
+#         #             'very_low': '#1a9641'     # verde scuro
+#         #         }
 
-        #         with col2:
-        #             selected_risk = st.selectbox(
-        #                 "Select Risk Level:",
-        #                 options=risk_levels,
-        #                 format_func=lambda x: risk_names[x],
-        #                 key="risk_level_select_chart1"
-        #             )
+#         #         device_types = list(device_data.keys())
 
-        #         if selected_type and selected_risk:
-        #             devices = detailed_device_data[selected_type][selected_risk]
-        #             if selected_type and selected_risk:
-        #                 devices = detailed_device_data[selected_type][selected_risk]
-        #                 if devices:
-        #                     st.write(f"**{risk_names[selected_risk]} {selected_type} Devices ({len(devices)} total):**")
+#         #         fig = go.Figure()
+
+#         #         for risk_level in risk_levels:
+#         #             # Prepara hover con lista dispositivi
+#         #             hover_texts = []
+#         #             for dt in device_types:
+#         #                 devices = detailed_device_data[dt][risk_level]
+#         #                 if devices:
+#         #                     details = "<br>".join([f"- {dev['description']} ({dev['brand']} {dev['model']})"
+#         #                                         for dev in devices[:5]])  # max 5 per non fare muro di testo
+#         #                     if len(devices) > 5:
+#         #                         details += f"<br>...and {len(devices)-5} more"
+#         #                     hover_texts.append(details)
+#         #                 else:
+#         #                     hover_texts.append("No devices")
+
+#         #             fig.add_trace(go.Bar(
+#         #                 name=risk_names[risk_level],
+#         #                 y=device_types,
+#         #                 x=[device_data[dt][risk_level] for dt in device_types],
+#         #                 orientation='h',
+#         #                 marker_color=colors[risk_level],
+#         #                 text=[device_data[dt][risk_level] if device_data[dt][risk_level] > 0 else '' for dt in device_types],
+#         #                 textposition="inside",
+#         #                 hovertext=hover_texts,
+#         #                 hoverinfo="text+x+name"
+#         #             ))
+
+#         #         fig.update_layout(
+#         #             title="Criticity Analysis by Device Type",
+#         #             barmode='stack',
+#         #             height=600,
+#         #             yaxis=dict(title="Device Type", automargin=True),
+#         #             xaxis=dict(title="Number of Devices"),
+#         #             legend=dict(
+#         #                 orientation="h",
+#         #                 yanchor="bottom",
+#         #                 y=1.02,
+#         #                 xanchor="center",
+#         #                 x=0.5
+#         #             ),
+#         #             plot_bgcolor="white",
+#         #             paper_bgcolor="white"
+#         #         )
+
+#         #         st.plotly_chart(fig, use_container_width=True)
+
+#         #         # --- Dettagli con selectbox
+#         #         st.write("### Explore Device Details")
+
+#         #         col1, col2 = st.columns(2)
+#         #         with col1:
+#         #             selected_type = st.selectbox(
+#         #                 "Select Device Type:",
+#         #                 options=list(device_data.keys()),
+#         #                 key="device_type_select_chart1"
+#         #             )
+
+#         #         with col2:
+#         #             selected_risk = st.selectbox(
+#         #                 "Select Risk Level:",
+#         #                 options=risk_levels,
+#         #                 format_func=lambda x: risk_names[x],
+#         #                 key="risk_level_select_chart1"
+#         #             )
+
+#         #         if selected_type and selected_risk:
+#         #             devices = detailed_device_data[selected_type][selected_risk]
+#         #             if selected_type and selected_risk:
+#         #                 devices = detailed_device_data[selected_type][selected_risk]
+#         #                 if devices:
+#         #                     st.write(f"**{risk_names[selected_risk]} {selected_type} Devices ({len(devices)} total):**")
                             
                         
                             
-        #                     df_details = pd.DataFrame([
-        #                         {
-        #                             'Serial number': dev['serial number'],  # Potrebbe essere 'serial_number' o 'udi_number'?
-        #                             'Description': dev['description'],
-        #                             'Brand': dev['brand'],
-        #                             'Model': dev['model'],
-        #                             'Location': f"{dev['room']} - {dev['ward']}",
-        #                             'Criticity Score': dev['criticity']
-        #                         }
-        #                         for dev in devices
-        #                     ])
-        #                     st.dataframe(df_details, use_container_width=True, hide_index=True)
-        #             else:
-        #                 st.info(f"No {selected_type} devices in {risk_names[selected_risk]} category")
+#         #                     df_details = pd.DataFrame([
+#         #                         {
+#         #                             'Serial number': dev['serial number'],  # Potrebbe essere 'serial_number' o 'udi_number'?
+#         #                             'Description': dev['description'],
+#         #                             'Brand': dev['brand'],
+#         #                             'Model': dev['model'],
+#         #                             'Location': f"{dev['room']} - {dev['ward']}",
+#         #                             'Criticity Score': dev['criticity']
+#         #                         }
+#         #                         for dev in devices
+#         #                     ])
+#         #                     st.dataframe(df_details, use_container_width=True, hide_index=True)
+#         #             else:
+#         #                 st.info(f"No {selected_type} devices in {risk_names[selected_risk]} category")
 
-        #         else:
-        #             st.info("No device data available for risk analysis")
-        #     else:
-        #         st.warning("No scoring data available. Please run fuzzy logic analysis first.")
+#         #         else:
+#         #             st.info("No device data available for risk analysis")
+#         #     else:
+#         #         st.warning("No scoring data available. Please run fuzzy logic analysis first.")
 
 
-        # with tab3:
-        #     if valid_scores:
-        #         costs = []
-        #         maintenance_costs = []
-        #         cost_ratio = []
+#         # with tab3:
+#         #     if valid_scores:
+#         #         costs = []
+#         #         maintenance_costs = []
+#         #         cost_ratio = []
         
-        #         for d in filtered_devices:
-        #             device_id = d[0]
-        #             cost_inr = d[6]
-        #             score_data = score_lookup.get(device_id)
+#         #         for d in filtered_devices:
+#         #             device_id = d[0]
+#         #             cost_inr = d[6]
+#         #             score_data = score_lookup.get(device_id)
                     
-        #             if score_data and cost_inr is not None:
-        #                 costs.append(cost_inr)
-        #                 if score_data.get('eq_function') is not None:
-        #                     maintenance_costs.append(score_data['eq_function'])
-        #                     cost_ratio.append(score_data['eq_function'])
+#         #             if score_data and cost_inr is not None:
+#         #                 costs.append(cost_inr)
+#         #                 if score_data.get('eq_function') is not None:
+#         #                     maintenance_costs.append(score_data['eq_function'])
+#         #                     cost_ratio.append(score_data['eq_function'])
 
-        #         fin_col1, fin_col2, fin_col3 = st.columns(3)
+#         #         fin_col1, fin_col2, fin_col3 = st.columns(3)
 
-        #         with fin_col1:
-        #             total_value = sum(costs) if costs else 0
-        #             st.metric("Total Asset Value", f"₹{total_value:,.0f}")
+#         #         with fin_col1:
+#         #             total_value = sum(costs) if costs else 0
+#         #             st.metric("Total Asset Value", f"₹{total_value:,.0f}")
 
-        #         with fin_col2:
-        #             avg_cost = sum(costs) / len(costs) if costs else 0
-        #             st.metric("Avg Device Value", f"₹{avg_cost:,.0f}")
+#         #         with fin_col2:
+#         #             avg_cost = sum(costs) / len(costs) if costs else 0
+#         #             st.metric("Avg Device Value", f"₹{avg_cost:,.0f}")
 
-        #         with fin_col3:
-        #             if cost_ratio:
-        #                 devices_above_15 = sum(1 for u in cost_ratio if u > 15)
-        #                 st.metric("High Maintenance Ratio Devices", f"{devices_above_15}", 
-        #                             delta="⚠️ More than usual" if devices_above_15 > 0 else "✅ All Good")
-        #             else:
-        #                 st.metric("High Maintenance Ratio Devices", "N/A")
+#         #         with fin_col3:
+#         #             if cost_ratio:
+#         #                 devices_above_15 = sum(1 for u in cost_ratio if u > 15)
+#         #                 st.metric("High Maintenance Ratio Devices", f"{devices_above_15}", 
+#         #                             delta="⚠️ More than usual" if devices_above_15 > 0 else "✅ All Good")
+#         #             else:
+#         #                 st.metric("High Maintenance Ratio Devices", "N/A")
 
-        #         fin_chart1, fin_chart2 = st.columns(2)
-        #         with fin_chart1:
-        #             class_costs = {}
-        #             for d in filtered_devices:
-        #                 device_id = d[0]
-        #                 location = location_lookup.get(device_id, {})
-        #                 ward_name = location.get('ward_name')
-        #                 cost = d[6] or 0
+#         #         fin_chart1, fin_chart2 = st.columns(2)
+#         #         with fin_chart1:
+#         #             class_costs = {}
+#         #             for d in filtered_devices:
+#         #                 device_id = d[0]
+#         #                 location = location_lookup.get(device_id, {})
+#         #                 ward_name = location.get('ward_name')
+#         #                 cost = d[6] or 0
 
-        #                 if ward_name in class_costs:
-        #                     class_costs[ward_name] += cost
-        #                 else:
-        #                     class_costs[ward_name] = cost
+#         #                 if ward_name in class_costs:
+#         #                     class_costs[ward_name] += cost
+#         #                 else:
+#         #                     class_costs[ward_name] = cost
 
-        #             if class_costs:
-        #                 fig = px.pie(
-        #                     values=list(class_costs.values()), 
-        #                     names=list(class_costs.keys()),
-        #                     title="Asset Value by Ward"
-        #                 )
-        #                 st.plotly_chart(fig, use_container_width=True)
+#         #             if class_costs:
+#         #                 fig = px.pie(
+#         #                     values=list(class_costs.values()), 
+#         #                     names=list(class_costs.keys()),
+#         #                     title="Asset Value by Ward"
+#         #                 )
+#         #                 st.plotly_chart(fig, use_container_width=True)
 
-        #         with fin_chart2:
-        #             if costs and maintenance_costs and len(costs) == len(maintenance_costs):
-        #                 maintenance_array = np.array(maintenance_costs)
-        #                 costs_array = np.array(costs)
+#         #         with fin_chart2:
+#         #             if costs and maintenance_costs and len(costs) == len(maintenance_costs):
+#         #                 maintenance_array = np.array(maintenance_costs)
+#         #                 costs_array = np.array(costs)
 
-        #                 ratios = np.divide(maintenance_array, costs_array, out=np.zeros_like(maintenance_array), where=costs_array!=0)
-        #                 scatter_df = pd.DataFrame({
-        #                     'Asset Value': costs,
-        #                     'Maintenance Cost %': ratios*100,
-        #                     'Device ID': [d[0] for d in filtered_devices if d[6] is not None and score_lookup.get(d[0]) and score_lookup.get(d[0]).get('eq_function') is not None]
-        #                 })
+#         #                 ratios = np.divide(maintenance_array, costs_array, out=np.zeros_like(maintenance_array), where=costs_array!=0)
+#         #                 scatter_df = pd.DataFrame({
+#         #                     'Asset Value': costs,
+#         #                     'Maintenance Cost %': ratios*100,
+#         #                     'Device ID': [d[0] for d in filtered_devices if d[6] is not None and score_lookup.get(d[0]) and score_lookup.get(d[0]).get('eq_function') is not None]
+#         #                 })
 
-        #                 fig = px.scatter(scatter_df, x='Asset Value', y='Maintenance Cost %',
-        #                                 hover_data=['Device ID'],
-        #                                 title="Maintenance Cost Ratio vs Asset Value")
-        #                 st.plotly_chart(fig, use_container_width=True)
+#         #                 fig = px.scatter(scatter_df, x='Asset Value', y='Maintenance Cost %',
+#         #                                 hover_data=['Device ID'],
+#         #                                 title="Maintenance Cost Ratio vs Asset Value")
+#         #                 st.plotly_chart(fig, use_container_width=True)
 
 
-        #     else:
-        #         st.warning("No financial data available for analysis.")
+#         #     else:
+#         #         st.warning("No financial data available for analysis.")
 
-        # if not filtered_devices:
-        #     st.info("No devices match the current filters. Please adjust your search criteria.")
+#         # if not filtered_devices:
+#         #     st.info("No devices match the current filters. Please adjust your search criteria.")
     
 
 
