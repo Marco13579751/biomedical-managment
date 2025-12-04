@@ -1238,110 +1238,110 @@ def show_prioritization_score_page():
 
     with tab1:
     
-        # # OTTIMIZZAZIONE: carica tutto con 1 query invece di 470+
-        # all_devices_with_scores = get_all_devices_with_scores_optimized()
-        # all_devices = get_all_devices()
-        # rooms = get_all_rooms()
-        # wards = get_all_wards()
+        # OTTIMIZZAZIONE: carica tutto con 1 query invece di 470+
+        all_devices_with_scores = get_all_devices_with_scores_optimized()
+        all_devices = get_all_devices()
+        rooms = get_all_rooms()
+        wards = get_all_wards()
         
  
 
-        # ward_options = {"All": "All Wards"}
-        # ward_options.update({str(w[0]): w[1] for w in wards})
+        ward_options = {"All": "All Wards"}
+        ward_options.update({str(w[0]): w[1] for w in wards})
 
-        # room_options = {"All": "All Rooms"}
-        # room_options.update({f"{r[0]}": f"Floor {r[1]} - {r[2]}" for r in rooms})
+        room_options = {"All": "All Rooms"}
+        room_options.update({f"{r[0]}": f"Floor {r[1]} - {r[2]}" for r in rooms})
 
-        # col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.columns(3)
 
-        # with col1:
-        #     selected_ward = st.selectbox(
-        #         "Filter by Ward:",
-        #         options=list(ward_options.keys()),
-        #         format_func=lambda x: ward_options[x],key='c'
-        #     )
+        with col1:
+            selected_ward = st.selectbox(
+                "Filter by Ward:",
+                options=list(ward_options.keys()),
+                format_func=lambda x: ward_options[x],key='c'
+            )
 
-        # with col2:
-        #     if selected_ward != "All":
-        #         filtered_rooms = [r for r in rooms if r[3] == int(selected_ward)]
-        #         room_filter_options = {"All": "All Rooms in Ward"}
-        #         room_filter_options.update({f"{r[0]}": f"Floor {r[1]} - {r[2]}" for r in filtered_rooms})
-        #     else:
-        #         room_filter_options = room_options
+        with col2:
+            if selected_ward != "All":
+                filtered_rooms = [r for r in rooms if r[3] == int(selected_ward)]
+                room_filter_options = {"All": "All Rooms in Ward"}
+                room_filter_options.update({f"{r[0]}": f"Floor {r[1]} - {r[2]}" for r in filtered_rooms})
+            else:
+                room_filter_options = room_options
         
-        #     selected_room = st.selectbox(
-        #         "Filter by Room:",
-        #         options=list(room_filter_options.keys()),
-        #         format_func=lambda x: room_filter_options[x], key='d'
-        #     )
+            selected_room = st.selectbox(
+                "Filter by Room:",
+                options=list(room_filter_options.keys()),
+                format_func=lambda x: room_filter_options[x], key='d'
+            )
 
-        # with col3:
-        #     search = st.text_input("🔍 Search devices:", placeholder="Search by ID, description, brand....")
+        with col3:
+            search = st.text_input("🔍 Search devices:", placeholder="Search by ID, description, brand....")
 
-        # filtered_devices = []
+        filtered_devices = []
 
-        # for d in all_devices:
-        #     device_id, parent_id, room_id, description, device_class, usage_type, cost_inr, present, brand, model, install_date, udi, serial_number, manufacturer_date, gmdn = d
+        for d in all_devices:
+            device_id, parent_id, room_id, description, device_class, usage_type, cost_inr, present, brand, model, install_date, udi, serial_number, manufacturer_date, gmdn = d
     
-        #     device_room = next((r for r in rooms if r[0] == room_id), None)
+            device_room = next((r for r in rooms if r[0] == room_id), None)
     
-        #     if selected_ward != "All":
-        #         if not device_room or device_room[3] != int(selected_ward):
-        #             continue
+            if selected_ward != "All":
+                if not device_room or device_room[3] != int(selected_ward):
+                    continue
     
-        #     if selected_room != "All":
-        #         if str(room_id) != selected_room:
-        #             continue
+            if selected_room != "All":
+                if str(room_id) != selected_room:
+                    continue
     
-        #     if search:
-        #         search_lower = search.lower()
-        #         room_info = f"Floor {device_room[1]} - {device_room[2]}" if device_room else ""
+            if search:
+                search_lower = search.lower()
+                room_info = f"Floor {device_room[1]} - {device_room[2]}" if device_room else ""
         
-        #         search_text = f"{serial_number} {description} {brand} {model} {room_info}".lower()
-        #         if search_lower not in search_text:
-        #             continue
+                search_text = f"{serial_number} {description} {brand} {model} {room_info}".lower()
+                if search_lower not in search_text:
+                    continue
     
-        #     filtered_devices.append(d)
+            filtered_devices.append(d)
 
-        # if not filtered_devices:
-        #     st.info("No devices found with the selected filters")
-        #     st.stop()
+        if not filtered_devices:
+            st.info("No devices found with the selected filters")
+            st.stop()
 
-        # if filtered_devices:
-        #     if search or selected_ward != "All" or selected_room != "All":
-        #         active_filters = []
-        #         if selected_ward != "All":
-        #             active_filters.append(f"Ward: {ward_options[selected_ward]}")
-        #         if selected_room!= "All":
-        #             active_filters.append(f"Room: {room_filter_options[selected_room]}")
-        #         if search:
-        #             active_filters.append(f"Search: '{search}'")
+        if filtered_devices:
+            if search or selected_ward != "All" or selected_room != "All":
+                active_filters = []
+                if selected_ward != "All":
+                    active_filters.append(f"Ward: {ward_options[selected_ward]}")
+                if selected_room!= "All":
+                    active_filters.append(f"Room: {room_filter_options[selected_room]}")
+                if search:
+                    active_filters.append(f"Search: '{search}'")
         
-        #         filter_text = " | ".join(active_filters)
-        #         st.success(f"Showing {len(filtered_devices)} device(s) with filters: {filter_text}")
-        #        # Crea lookup veloci per evitare query ripetute
-        # score_lookup = {}
-        # location_lookup = {}
+                filter_text = " | ".join(active_filters)
+                st.success(f"Showing {len(filtered_devices)} device(s) with filters: {filter_text}")
+               # Crea lookup veloci per evitare query ripetute
+        score_lookup = {}
+        location_lookup = {}
         
-        # for row in all_devices_with_scores:
-        #     device_id = row[0]
-        #     # Salva score se presente
-        #     if row[17] is not None:  # se ha criticity_score
-        #         score_lookup[device_id] = {
-        #             'criticity_score': row[17],
-        #             'supp_score': row[18],
-        #             'miss_score': row[19],
-        #             'vulnerability_score': row[20],
-        #             'eq_function': row[21],
-        #             'age_years': row[22],
-        #             'downtime': row[23],
-        #             'assessment_date': row[24]
-        #         }
-        #     # Salva location
-        #     location_lookup[device_id] = {
-        #         'room_name': row[15],
-        #         'ward_name': row[16]
-        #     }
+        for row in all_devices_with_scores:
+            device_id = row[0]
+            # Salva score se presente
+            if row[17] is not None:  # se ha criticity_score
+                score_lookup[device_id] = {
+                    'criticity_score': row[17],
+                    'supp_score': row[18],
+                    'miss_score': row[19],
+                    'vulnerability_score': row[20],
+                    'eq_function': row[21],
+                    'age_years': row[22],
+                    'downtime': row[23],
+                    'assessment_date': row[24]
+                }
+            # Salva location
+            location_lookup[device_id] = {
+                'room_name': row[15],
+                'ward_name': row[16]
+            }
         tab1, tab2, tab3 = st.tabs(["Overview Table", "Score Analytics", "Financial Analysis"])
 
 #         # LOGICA UNIFICATA - Creazione dati una sola volta
@@ -1483,152 +1483,152 @@ def show_prioritization_score_page():
 #             df_data.append(row_data)
 
 
-        with tab1:
-            try:
-                cur.execute("SELECT COUNT(*) FROM scoring_parameters")
-                scoring_count = cur.fetchone()[0]
+        # with tab1:
+        #     try:
+        #         cur.execute("SELECT COUNT(*) FROM scoring_parameters")
+        #         scoring_count = cur.fetchone()[0]
 
-                if scoring_count > 0:
+        #         if scoring_count > 0:
                     
 
-                    # Ora crea le colonne - il CSS si applicherà alle metriche
-                    col1, col2 = st.columns(2)
+        #             # Ora crea le colonne - il CSS si applicherà alle metriche
+        #             col1, col2 = st.columns(2)
 
-                    with col1:
-                        high_risk_count = 0
-                        for d in filtered_devices:
-                            device_id = d[0]
-                            score_data = score_lookup.get(device_id)
-                            if score_data and score_data['criticity_score'] is not None and score_data['criticity_score'] > 6:
-                                high_risk_count += 1
+        #             with col1:
+        #                 high_risk_count = 0
+        #                 for d in filtered_devices:
+        #                     device_id = d[0]
+        #                     score_data = score_lookup.get(device_id)
+        #                     if score_data and score_data['criticity_score'] is not None and score_data['criticity_score'] > 6:
+        #                         high_risk_count += 1
     
-                        st.metric("High Risk Devices", value=high_risk_count,
-                                   delta="⚠️ Need Action" if high_risk_count > 0 else "✅ All Good",delta_color="inverse")
+        #                 st.metric("High Risk Devices", value=high_risk_count,
+        #                            delta="⚠️ Need Action" if high_risk_count > 0 else "✅ All Good",delta_color="inverse")
 
-                    with col2:
-                        # Conta solo dispositivi con score effettivamente calcolati (criticity_score non NULL)
-                        analyzed_devices = 0
-                        for d in filtered_devices:
-                            device_id = d[0]
-                            score_data = score_lookup.get(device_id)
-                            if score_data and score_data['criticity_score'] is not None:
-                                analyzed_devices += 1
+        #             with col2:
+        #                 # Conta solo dispositivi con score effettivamente calcolati (criticity_score non NULL)
+        #                 analyzed_devices = 0
+        #                 for d in filtered_devices:
+        #                     device_id = d[0]
+        #                     score_data = score_lookup.get(device_id)
+        #                     if score_data and score_data['criticity_score'] is not None:
+        #                         analyzed_devices += 1
                         
-                        total_devices = len(filtered_devices)
-                        coverage = (analyzed_devices / total_devices) * 100 if total_devices > 0 else 0
-                        st.metric("Analysis Coverage", f"{coverage:.1f}%", 
-                                    delta=f"{analyzed_devices}/{total_devices} devices")
+        #                 total_devices = len(filtered_devices)
+        #                 coverage = (analyzed_devices / total_devices) * 100 if total_devices > 0 else 0
+        #                 st.metric("Analysis Coverage", f"{coverage:.1f}%", 
+        #                             delta=f"{analyzed_devices}/{total_devices} devices")
 
-                else:
-                    st.warning("⚠️ No fuzzy logic results found. Run analysis in 'Scoring Assessment' page first.")
+        #         else:
+        #             st.warning("⚠️ No fuzzy logic results found. Run analysis in 'Scoring Assessment' page first.")
 
-            except Exception as e:
-                st.error(f"Error checking scoring data: {e}")
+        #     except Exception as e:
+        #         st.error(f"Error checking scoring data: {e}")
                 
-            df = pd.DataFrame(df_data)
-            # Converti i valori numerici da string a float per il coloring
-            # Helper function per conversione sicura a float
-            def safe_float(val):
-                """Converte in float solo se possibile, altrimenti ritorna None"""
-                if val == 'N/A' or val is None:
-                    return None
-                try:
-                    return float(val)
-                except (ValueError, TypeError):
-                    return None
+        #     df = pd.DataFrame(df_data)
+        #     # Converti i valori numerici da string a float per il coloring
+        #     # Helper function per conversione sicura a float
+        #     def safe_float(val):
+        #         """Converte in float solo se possibile, altrimenti ritorna None"""
+        #         if val == 'N/A' or val is None:
+        #             return None
+        #         try:
+        #             return float(val)
+        #         except (ValueError, TypeError):
+        #             return None
 
-            styled_df = df.style.applymap(
-                lambda val: (
-                    'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 8 else
-                    'background-color: #fff2e6' if safe_float(val) is not None and safe_float(val) >= 6 else
-                    'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 4 else
-                    'background-color: #f0fff0' if safe_float(val) is not None and safe_float(val) >= 2 else
-                    'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
-                    ''  # Per 'N/A'
-                ),
-                subset=['Fuzzy Criticity']
-            ).applymap(
-                lambda val: (
-                    'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 50 else
-                    'background-color: #fff2e6' if safe_float(val) is not None and safe_float(val) >= 40 else
-                    'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 30 else
-                    'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
-                    ''  # Per 'N/A'
-                ),
-                subset=['RPV1 Criticity']
-            ).applymap(
-                lambda val: (
-                    'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 20 else
-                    'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 10 else
-                    'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
-                    ''  # Per 'N/A'
-                ),
-                subset=['Mission Score']
-            ).applymap(
-                lambda val: (
-                    'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 6.5 else
-                    'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 3.5 else
-                    'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 0 else
-                    ''  # Per 'N/A'
-                ),
-                subset=['Support Score']
-            ).applymap(
-                lambda val: (
-                    'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 10 else      
-                    'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 5 else
-                    'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
-                    ''  # Per 'N/A'
-                ),
-                subset=['Age (years)']
-            ).applymap(
-                lambda val: (
-                    'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == 'End of Support' else                
-                    'background-color: #fffff0' if val != 'N/A' and val == 'End of Life' else
-                    'background-color: #e6ffe6' if val != 'N/A' and val == '0' else
-                    ''  # Per 'N/A'
-                ),
-                subset=['Usage Types']
-            ).applymap(
-                lambda val: (
-                    'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) > 3 else      
-                    'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) > 1 else
-                    'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
-                    ''  # Per 'N/A'
-                ),
-                subset=['Current downtime (days)']
-            ).applymap(
-                lambda val: (
-                    'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == '0' else                
-                    'background-color: #f0fff0' if val != 'N/A' and val == '1-2' else
-                    'background-color: #e6ffe6' if val != 'N/A' and val == '>=3' else
-                    ''  # Per 'N/A'
-                ),
-                subset=['Backup Available']
-            ).applymap(
-                lambda val: (
-                    'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == 'Imported and NO avalability of spare parts' else                
-                    'background-color: #fffff0' if val != 'N/A' and val == 'Local production and NO avalability of spare parts' else
-                    'background-color: #f0fff0' if val != 'N/A' and val == 'Imported and avalability of spare parts' else
-                    'background-color: #e6ffe6' if val != 'N/A' and val == 'Local production and avalability of spare parts' else
-                    ''  # Per 'N/A'
-                ),
-            )
+        #     styled_df = df.style.applymap(
+        #         lambda val: (
+        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 8 else
+        #             'background-color: #fff2e6' if safe_float(val) is not None and safe_float(val) >= 6 else
+        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 4 else
+        #             'background-color: #f0fff0' if safe_float(val) is not None and safe_float(val) >= 2 else
+        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
+        #             ''  # Per 'N/A'
+        #         ),
+        #         subset=['Fuzzy Criticity']
+        #     ).applymap(
+        #         lambda val: (
+        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 50 else
+        #             'background-color: #fff2e6' if safe_float(val) is not None and safe_float(val) >= 40 else
+        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 30 else
+        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
+        #             ''  # Per 'N/A'
+        #         ),
+        #         subset=['RPV1 Criticity']
+        #     ).applymap(
+        #         lambda val: (
+        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 20 else
+        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 10 else
+        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
+        #             ''  # Per 'N/A'
+        #         ),
+        #         subset=['Mission Score']
+        #     ).applymap(
+        #         lambda val: (
+        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 6.5 else
+        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 3.5 else
+        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 0 else
+        #             ''  # Per 'N/A'
+        #         ),
+        #         subset=['Support Score']
+        #     ).applymap(
+        #         lambda val: (
+        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 10 else      
+        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 5 else
+        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
+        #             ''  # Per 'N/A'
+        #         ),
+        #         subset=['Age (years)']
+        #     ).applymap(
+        #         lambda val: (
+        #             'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == 'End of Support' else                
+        #             'background-color: #fffff0' if val != 'N/A' and val == 'End of Life' else
+        #             'background-color: #e6ffe6' if val != 'N/A' and val == '0' else
+        #             ''  # Per 'N/A'
+        #         ),
+        #         subset=['Usage Types']
+        #     ).applymap(
+        #         lambda val: (
+        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) > 3 else      
+        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) > 1 else
+        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
+        #             ''  # Per 'N/A'
+        #         ),
+        #         subset=['Current downtime (days)']
+        #     ).applymap(
+        #         lambda val: (
+        #             'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == '0' else                
+        #             'background-color: #f0fff0' if val != 'N/A' and val == '1-2' else
+        #             'background-color: #e6ffe6' if val != 'N/A' and val == '>=3' else
+        #             ''  # Per 'N/A'
+        #         ),
+        #         subset=['Backup Available']
+        #     ).applymap(
+        #         lambda val: (
+        #             'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == 'Imported and NO avalability of spare parts' else                
+        #             'background-color: #fffff0' if val != 'N/A' and val == 'Local production and NO avalability of spare parts' else
+        #             'background-color: #f0fff0' if val != 'N/A' and val == 'Imported and avalability of spare parts' else
+        #             'background-color: #e6ffe6' if val != 'N/A' and val == 'Local production and avalability of spare parts' else
+        #             ''  # Per 'N/A'
+        #         ),
+        #     )
 
 
-            st.dataframe(styled_df, use_container_width=True, hide_index=True)
+        #     st.dataframe(styled_df, use_container_width=True, hide_index=True)
 
-            # Crea un buffer in memoria
-            buffer = BytesIO()
-            with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
-                df.to_excel(writer, index=False, sheet_name='Device Analysis')
-            buffer.seek(0)
+        #     # Crea un buffer in memoria
+        #     buffer = BytesIO()
+        #     with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+        #         df.to_excel(writer, index=False, sheet_name='Device Analysis')
+        #     buffer.seek(0)
 
-            st.download_button(
-                label="📥 Export to Excel",
-                data=buffer.getvalue(),
-                file_name=f"device_analysis_{dtm.date.today()}.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            )
+        #     st.download_button(
+        #         label="📥 Export to Excel",
+        #         data=buffer.getvalue(),
+        #         file_name=f"device_analysis_{dtm.date.today()}.xlsx",
+        #         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        #     )
 
 
         # with tab2:
