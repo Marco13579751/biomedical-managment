@@ -1237,10 +1237,36 @@ def show_prioritization_score_page():
                 st.error(f"Error loading device information: {str(e)}")
 
     with tab1:
-        
+    
+        # OTTIMIZZAZIONE: carica tutto con 1 query invece di 470+
+        all_devices_with_scores = get_all_devices_with_scores_optimized()
         all_devices = get_all_devices()
         rooms = get_all_rooms()
         wards = get_all_wards()
+        
+        # Crea lookup veloci per evitare query ripetute
+        score_lookup = {}
+        location_lookup = {}
+        
+        for row in all_devices_with_scores:
+            device_id = row[0]
+            # Salva score se presente
+            if row[17] is not None:  # se ha criticity_score
+                score_lookup[device_id] = {
+                    'criticity_score': row[17],
+                    'supp_score': row[18],
+                    'miss_score': row[19],
+                    'vulnerability_score': row[20],
+                    'eq_function': row[21],
+                    'age_years': row[22],
+                    'downtime': row[23],
+                    'assessment_date': row[24]
+                }
+            # Salva location
+            location_lookup[device_id] = {
+                'room_name': row[15],
+                'ward_name': row[16]
+            }
 
         ward_options = {"All": "All Wards"}
         ward_options.update({str(w[0]): w[1] for w in wards})
@@ -1337,7 +1363,8 @@ def show_prioritization_score_page():
                 'serial_number': serial_number
             }
 
-            score = get_scores_by_device_id(device_id)
+            # Usa lookup invece di query
+            score_data = score_lookup.get(device_id)
             breakd=get_breakdown_by_id_last(device_id)
 
             # Calculate age_years
@@ -1349,7 +1376,8 @@ def show_prioritization_score_page():
                 age_years = (oggi - install_date).days / 365
 
             # *** CONTROLLO NULL PRINCIPALE - Se score è None, salta i calcoli complessi ***
-            if score is None:
+            # *** CONTROLLO NULL PRINCIPALE - Se score_data è None, salta i calcoli complessi ***
+            if score_data is None:
                 # Dispositivo senza scoring parameters - crea row con valori N/A
                 row_data = {
                     'Description': description or 'N/A',
@@ -1371,7 +1399,23 @@ def show_prioritization_score_page():
                 }
                 df_data.append(row_data)
                 continue  # Skip to next device
-
+# *** SE ARRIVIAMO QUI, score_data NON è None ***
+            # Ricostruisci tuple "score" per compatibilità con codice esistente
+            score = (
+                None,  # parameter_id
+                device_id,
+                score_data['assessment_date'],
+                score_data['age_years'],
+                score_data['downtime'],
+                None,  # service_availability
+                None,  # spare_parts_availability
+                None,  # backup
+                score_data['eq_function'],
+                None,  # cumulative_maintenance
+                score_data['miss_score'],
+                score_data['supp_score'],
+                score_data['criticity_score']
+            )
             # *** SE ARRIVIAMO QUI, score NON è None ***
             back = 'N/A'
             if score[7] is not None:
@@ -1432,8 +1476,8 @@ def show_prioritization_score_page():
                 'Service supoprt': 'Yes' if score[5] == 1 else 'No' if score[5] is not None else 'N/A',
                 'Spare parts availability': 'Yes' if score[6] == 1 else 'No' if score[6] is not None else 'N/A',
                 'Backup Available': back,
-                'Ward': ward_options.get(str(next((r[3] for r in rooms if r[0] == room_id), None)), 'N/A') if room_id else 'N/A',
-                'Room': room_options.get(str(room_id), 'N/A') if room_id else 'N/A'
+                'Ward': location_lookup.get(device_id, {}).get('ward_name', 'N/A'),
+                'Room': location_lookup.get(device_id, {}).get('room_name', 'N/A')
             }
 
             df_data.append(row_data)
@@ -1454,8 +1498,8 @@ def show_prioritization_score_page():
                         high_risk_count = 0
                         for d in filtered_devices:
                             device_id = d[0]
-                            score = get_scores_by_device_id(device_id)
-                            if score and score[12] is not None and score[12] > 6:
+                            score_data = score_lookup.get(device_id)
+                            if score_data and score_data['criticity_score'] is not None and score_data['criticity_score'] > 6:
                                 high_risk_count += 1
     
                         st.metric("High Risk Devices", value=high_risk_count,
@@ -1466,8 +1510,8 @@ def show_prioritization_score_page():
                         analyzed_devices = 0
                         for d in filtered_devices:
                             device_id = d[0]
-                            score = get_scores_by_device_id(device_id)
-                            if score and score[12] is not None:  # criticity_score non NULL
+                            score_data = score_lookup.get(device_id)
+                            if score_data and score_data['criticity_score'] is not None:
                                 analyzed_devices += 1
                         
                         total_devices = len(filtered_devices)
@@ -1493,7 +1537,7 @@ def show_prioritization_score_page():
                 except (ValueError, TypeError):
                     return None
 
-            styled_df = df.style.map(
+            styled_df = df.style.applymap(
                 lambda val: (
                     'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 8 else
                     'background-color: #fff2e6' if safe_float(val) is not None and safe_float(val) >= 6 else
@@ -1503,7 +1547,7 @@ def show_prioritization_score_page():
                     ''  # Per 'N/A'
                 ),
                 subset=['Fuzzy Criticity']
-            ).map(
+            ).applymap(
                 lambda val: (
                     'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 50 else
                     'background-color: #fff2e6' if safe_float(val) is not None and safe_float(val) >= 40 else
@@ -1512,7 +1556,7 @@ def show_prioritization_score_page():
                     ''  # Per 'N/A'
                 ),
                 subset=['RPV1 Criticity']
-            ).map(
+            ).applymap(
                 lambda val: (
                     'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 20 else
                     'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 10 else
@@ -1520,7 +1564,7 @@ def show_prioritization_score_page():
                     ''  # Per 'N/A'
                 ),
                 subset=['Mission Score']
-            ).map(
+            ).applymap(
                 lambda val: (
                     'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 6.5 else
                     'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 3.5 else
@@ -1528,7 +1572,7 @@ def show_prioritization_score_page():
                     ''  # Per 'N/A'
                 ),
                 subset=['Support Score']
-            ).map(
+            ).applymap(
                 lambda val: (
                     'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 10 else      
                     'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 5 else
@@ -1536,7 +1580,7 @@ def show_prioritization_score_page():
                     ''  # Per 'N/A'
                 ),
                 subset=['Age (years)']
-            ).map(
+            ).applymap(
                 lambda val: (
                     'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == 'End of Support' else                
                     'background-color: #fffff0' if val != 'N/A' and val == 'End of Life' else
@@ -1544,7 +1588,7 @@ def show_prioritization_score_page():
                     ''  # Per 'N/A'
                 ),
                 subset=['Usage Types']
-            ).map(
+            ).applymap(
                 lambda val: (
                     'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) > 3 else      
                     'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) > 1 else
@@ -1552,7 +1596,7 @@ def show_prioritization_score_page():
                     ''  # Per 'N/A'
                 ),
                 subset=['Current downtime (days)']
-            ).map(
+            ).applymap(
                 lambda val: (
                     'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == '0' else                
                     'background-color: #f0fff0' if val != 'N/A' and val == '1-2' else
@@ -1560,7 +1604,7 @@ def show_prioritization_score_page():
                     ''  # Per 'N/A'
                 ),
                 subset=['Backup Available']
-            ).map(
+            ).applymap(
                 lambda val: (
                     'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == 'Imported and NO avalability of spare parts' else                
                     'background-color: #fffff0' if val != 'N/A' and val == 'Local production and NO avalability of spare parts' else
@@ -1571,15 +1615,14 @@ def show_prioritization_score_page():
             )
 
 
-            st.dataframe(styled_df, hide_index=True, width="stretch")
-
+            st.dataframe(styled_df, use_container_width=True, hide_index=True)
 
             # Crea un buffer in memoria
             buffer = BytesIO()
             with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
                 df.to_excel(writer, index=False, sheet_name='Device Analysis')
             buffer.seek(0)
-            
+
             st.download_button(
                 label="📥 Export to Excel",
                 data=buffer.getvalue(),
@@ -1596,14 +1639,14 @@ def show_prioritization_score_page():
         
                 for d in filtered_devices:
                     device_id = d[0]
-                    score = get_scores_by_device_id(device_id)
-                    if score:
-                        if score[12] is not None:
-                            criticities.append(score[12])
-                        if score[10] is not None:
-                            mission_scores.append(score[10])
-                        if score[11] is not None:
-                            support_scores.append(score[11])
+                    score_data = score_lookup.get(device_id)
+                    if score_data:
+                        if score_data['criticity_score'] is not None:
+                            criticities.append(score_data['criticity_score'])
+                        if score_data['miss_score'] is not None:
+                            mission_scores.append(score_data['miss_score'])
+                        if score_data['supp_score'] is not None:
+                            support_scores.append(score_data['supp_score'])
 
                 with col1:
                     if criticities:
@@ -1629,13 +1672,13 @@ def show_prioritization_score_page():
                 chart_col1, chart_col2 = st.columns(2)
 
                 with chart_col1:
-    
+                        
                     criticities = []
                     for d in filtered_devices:
                         device_id = d[0]
-                        score = get_scores_by_device_id(device_id)
-                        if score and score[12] is not None:
-                            criticities.append(score[12])
+                        score_data = score_lookup.get(device_id)
+                        if score_data and score_data['criticity_score'] is not None:
+                            criticities.append(score_data['criticity_score'])
     
                     if criticities:
                         criticity_ranges = {
@@ -1680,21 +1723,21 @@ def show_prioritization_score_page():
                 with chart_col2:
                     st.write("**High & Very High Risk Devices**")
                     high_risk_devices = []
-            
+
                     for d in filtered_devices:
                         device_id = d[0]
-                        score = get_scores_by_device_id(device_id)
-                        roomname=get_room_name_by_device(device_id)
-                        wardname=get_ward_name_by_device(device_id)
-                        if score and score[12] is not None and score[12] > 6.0:
+                        score_data = score_lookup.get(device_id)
+                        location = location_lookup.get(device_id, {})
+                        
+                        if score_data and score_data['criticity_score'] is not None and score_data['criticity_score'] > 6.0:
                             device_info = device_lookup.get(device_id, {})
                             device_name = device_info.get('description', 'Unknown Device')
-                    
+                            
                             high_risk_devices.append({
                                 'Device description': device_name,
                                 'Serial Number': device_info.get('serial_number','N/A'),
-                                'Criticity': round(score[12], 2),                              
-                                'Location': f"{roomname} - {wardname}"
+                                'Criticity': round(score_data['criticity_score'], 2),                              
+                                'Location': f"{location.get('room_name', 'N/A')} - {location.get('ward_name', 'N/A')}"
                             })
 
                     if high_risk_devices:
@@ -1970,7 +2013,9 @@ def show_prioritization_score_page():
                 with fin_chart1:
                     class_costs = {}
                     for d in filtered_devices:
-                        ward_name = get_ward_name_by_device(d[0])
+                        device_id = d[0]
+                        location = location_lookup.get(device_id, {})
+                        ward_name = location.get('ward_name')
                         cost = d[6] or 0
 
                         if ward_name in class_costs:
