@@ -1,4 +1,5 @@
 import psycopg2
+from psycopg2 import pool
 import bcrypt
 import datetime
 import os
@@ -29,8 +30,33 @@ def get_db_connection():
     #     port="5432"
     # )
     # Connection Pooler - porta 6543 (bypassa firewall)
+# ============================================
+# POOL DI CONNESSIONI (nuovo - aggiungere)
+# ============================================
 conn = get_db_connection()
 cur = conn.cursor()
+
+@st.cache_resource
+def get_connection_pool():
+    """Crea un pool di connessioni riutilizzabili"""
+    return psycopg2.pool.SimpleConnectionPool(
+        1, 20,  # min 1, max 20 connessioni
+        host=st.secrets["postgres"]["host"],
+        port=st.secrets["postgres"]["port"],
+        database=st.secrets["postgres"]["database"],
+        user=st.secrets["postgres"]["user"],
+        password=st.secrets["postgres"]["password"]
+    )
+
+def get_db_conn():
+    """Ottieni connessione dal pool"""
+    pool = get_connection_pool()
+    return pool.getconn()
+
+def release_db_connection(conn):
+    """Rilascia connessione al pool"""
+    pool = get_connection_pool()
+    pool.putconn(conn)
 
 # --- Funzioni DB Utenti ---
 def db_signin(email, password):
@@ -716,9 +742,67 @@ def delete_room(room_id):
     
     return deleted is not None  # True se almeno una riga è stata eliminata
 
+@st.cache_data(ttl=60)
 def get_all_devices():
     cur.execute("SELECT * FROM medical_device ORDER BY device_id")
     return cur.fetchall()
+@st.cache_data(ttl=60)
+def get_all_devices_with_scores_optimized():
+    """
+    Prende TUTTI i dispositivi con scores e ward in UNA SOLA QUERY
+    Usa JOIN invece di query multiple - OTTIMIZZATO!
+    """
+    conn = get_db_conn()
+    try:
+        cur = conn.cursor()
+        
+        query = """
+        SELECT 
+            md.device_id,
+            md.parent_id,
+            md.room_id,
+            md.description,
+            md.class,
+            md.usage_type,
+            md.cost_inr,
+            md.present,
+            md.brand,
+            md.model,
+            md.installation_date,
+            md.udi_number,
+            md.serial_number,
+            md.manufacturer_date,
+            md.gmdn,
+            r.room_name,
+            w.ward_name,
+            sp.criticity_score,
+            sp.supp_score,
+            sp.miss_score,
+            sp.vulnerability_score,
+            sp.eq_function,
+            sp.age_years,
+            sp.downtime,
+            sp.assessment_date
+        FROM medical_device md
+        LEFT JOIN room r ON md.room_id = r.room_id
+        LEFT JOIN ward w ON r.ward_id = w.ward_id
+        LEFT JOIN LATERAL (
+            SELECT *
+            FROM scoring_parameters
+            WHERE device_id = md.device_id
+            ORDER BY assessment_date DESC
+            LIMIT 1
+        ) sp ON true
+        ORDER BY md.device_id
+        """
+        
+        cur.execute(query)
+        results = cur.fetchall()
+        
+        return results
+        
+    finally:
+        release_db_connection(conn)
 
 def get_all_wards():
     """Recupera tutti  i ward"""
