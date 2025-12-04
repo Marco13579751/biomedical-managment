@@ -803,12 +803,12 @@ def get_all_devices_with_scores_optimized():
         
     finally:
         release_db_connection(conn)
-
+@st.cache_data(ttl=60)
 def get_all_wards():
     """Recupera tutti  i ward"""
     cur.execute("SELECT ward_id, ward_name FROM ward")
     return cur.fetchall()
-
+@st.cache_data(ttl=60)
 def get_all_rooms():
     """Recupera tutte le stanze"""
     cur.execute("SELECT Room_ID, Floor_ID, room_name, ward_id FROM Room ORDER BY Room_ID, Floor_ID")
