@@ -1577,7 +1577,8 @@ def show_prioritization_score_page():
             buffer = BytesIO()
             with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
                 df.to_excel(writer, index=False, sheet_name='Device Analysis')
-
+            buffer.seek(0)
+            
             st.download_button(
                 label="📥 Export to Excel",
                 data=buffer.getvalue(),
