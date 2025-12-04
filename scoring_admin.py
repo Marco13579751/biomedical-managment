@@ -1493,7 +1493,7 @@ def show_prioritization_score_page():
                 except (ValueError, TypeError):
                     return None
 
-            styled_df = df.style.applymap(
+            styled_df = df.style.map(
                 lambda val: (
                     'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 8 else
                     'background-color: #fff2e6' if safe_float(val) is not None and safe_float(val) >= 6 else
@@ -1503,7 +1503,7 @@ def show_prioritization_score_page():
                     ''  # Per 'N/A'
                 ),
                 subset=['Fuzzy Criticity']
-            ).applymap(
+            ).map(
                 lambda val: (
                     'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 50 else
                     'background-color: #fff2e6' if safe_float(val) is not None and safe_float(val) >= 40 else
@@ -1512,7 +1512,7 @@ def show_prioritization_score_page():
                     ''  # Per 'N/A'
                 ),
                 subset=['RPV1 Criticity']
-            ).applymap(
+            ).map(
                 lambda val: (
                     'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 20 else
                     'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 10 else
@@ -1520,7 +1520,7 @@ def show_prioritization_score_page():
                     ''  # Per 'N/A'
                 ),
                 subset=['Mission Score']
-            ).applymap(
+            ).map(
                 lambda val: (
                     'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 6.5 else
                     'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 3.5 else
@@ -1528,7 +1528,7 @@ def show_prioritization_score_page():
                     ''  # Per 'N/A'
                 ),
                 subset=['Support Score']
-            ).applymap(
+            ).map(
                 lambda val: (
                     'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 10 else      
                     'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 5 else
@@ -1536,7 +1536,7 @@ def show_prioritization_score_page():
                     ''  # Per 'N/A'
                 ),
                 subset=['Age (years)']
-            ).applymap(
+            ).map(
                 lambda val: (
                     'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == 'End of Support' else                
                     'background-color: #fffff0' if val != 'N/A' and val == 'End of Life' else
@@ -1544,7 +1544,7 @@ def show_prioritization_score_page():
                     ''  # Per 'N/A'
                 ),
                 subset=['Usage Types']
-            ).applymap(
+            ).map(
                 lambda val: (
                     'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) > 3 else      
                     'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) > 1 else
@@ -1552,7 +1552,7 @@ def show_prioritization_score_page():
                     ''  # Per 'N/A'
                 ),
                 subset=['Current downtime (days)']
-            ).applymap(
+            ).map(
                 lambda val: (
                     'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == '0' else                
                     'background-color: #f0fff0' if val != 'N/A' and val == '1-2' else
@@ -1560,7 +1560,7 @@ def show_prioritization_score_page():
                     ''  # Per 'N/A'
                 ),
                 subset=['Backup Available']
-            ).applymap(
+            ).map(
                 lambda val: (
                     'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == 'Imported and NO avalability of spare parts' else                
                     'background-color: #fffff0' if val != 'N/A' and val == 'Local production and NO avalability of spare parts' else
@@ -1571,20 +1571,21 @@ def show_prioritization_score_page():
             )
 
 
-            # st.dataframe(styled_df, use_container_width=True, hide_index=True)
+            st.dataframe(styled_df, hide_index=True, width="stretch")
 
-            # # Crea un buffer in memoria
-            # buffer = BytesIO()
-            # with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
-            #     df.to_excel(writer, index=False, sheet_name='Device Analysis')
-            # buffer.seek(0)
+
+            # Crea un buffer in memoria
+            buffer = BytesIO()
+            with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+                df.to_excel(writer, index=False, sheet_name='Device Analysis')
+            buffer.seek(0)
             
-            # st.download_button(
-            #     label="📥 Export to Excel",
-            #     data=buffer.getvalue(),
-            #     file_name=f"device_analysis_{dtm.date.today()}.xlsx",
-            #     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            # )
+            st.download_button(
+                label="📥 Export to Excel",
+                data=buffer.getvalue(),
+                file_name=f"device_analysis_{dtm.date.today()}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
         with tab2:
             if valid_scores:
                 col1, col2, col3 = st.columns(3)
