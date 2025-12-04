@@ -1629,350 +1629,350 @@ def show_prioritization_score_page():
         #         file_name=f"device_analysis_{dtm.date.today()}.xlsx",
         #         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         #     )
-        with tab2:
-            if valid_scores:
-                col1, col2, col3 = st.columns(3)
+        # with tab2:
+        #     if valid_scores:
+        #         col1, col2, col3 = st.columns(3)
 
-                criticities = []
-                mission_scores = []
-                support_scores = []
+        #         criticities = []
+        #         mission_scores = []
+        #         support_scores = []
         
-                for d in filtered_devices:
-                    device_id = d[0]
-                    score_data = score_lookup.get(device_id)
-                    if score_data:
-                        if score_data['criticity_score'] is not None:
-                            criticities.append(score_data['criticity_score'])
-                        if score_data['miss_score'] is not None:
-                            mission_scores.append(score_data['miss_score'])
-                        if score_data['supp_score'] is not None:
-                            support_scores.append(score_data['supp_score'])
+        #         for d in filtered_devices:
+        #             device_id = d[0]
+        #             score_data = score_lookup.get(device_id)
+        #             if score_data:
+        #                 if score_data['criticity_score'] is not None:
+        #                     criticities.append(score_data['criticity_score'])
+        #                 if score_data['miss_score'] is not None:
+        #                     mission_scores.append(score_data['miss_score'])
+        #                 if score_data['supp_score'] is not None:
+        #                     support_scores.append(score_data['supp_score'])
 
-                with col1:
-                    if criticities:
-                        avg_criticality = sum(criticities) / len(criticities)
-                        st.metric("Average Criticity", f"{avg_criticality:.2f}")
-                    else:
-                        st.metric("Average Criticity", "N/A")
+        #         with col1:
+        #             if criticities:
+        #                 avg_criticality = sum(criticities) / len(criticities)
+        #                 st.metric("Average Criticity", f"{avg_criticality:.2f}")
+        #             else:
+        #                 st.metric("Average Criticity", "N/A")
 
-                with col2:
-                    if mission_scores:
-                        avg_mission = sum(mission_scores) / len(mission_scores)
-                        st.metric("Average Mission Score", f"{avg_mission:.2f}")
-                    else:
-                        st.metric("Average Mission Score", "N/A")
+        #         with col2:
+        #             if mission_scores:
+        #                 avg_mission = sum(mission_scores) / len(mission_scores)
+        #                 st.metric("Average Mission Score", f"{avg_mission:.2f}")
+        #             else:
+        #                 st.metric("Average Mission Score", "N/A")
 
-                with col3:
-                    if support_scores:
-                        avg_support = sum(support_scores) / len(support_scores)
-                        st.metric("Average Support Score", f"{avg_support:.2f}")
-                    else:
-                        st.metric("Average Support Score", "N/A")
-                st.divider()
-                chart_col1, chart_col2 = st.columns(2)
+        #         with col3:
+        #             if support_scores:
+        #                 avg_support = sum(support_scores) / len(support_scores)
+        #                 st.metric("Average Support Score", f"{avg_support:.2f}")
+        #             else:
+        #                 st.metric("Average Support Score", "N/A")
+        #         st.divider()
+        #         chart_col1, chart_col2 = st.columns(2)
 
-                with chart_col1:
+        #         with chart_col1:
                         
-                    criticities = []
-                    for d in filtered_devices:
-                        device_id = d[0]
-                        score_data = score_lookup.get(device_id)
-                        if score_data and score_data['criticity_score'] is not None:
-                            criticities.append(score_data['criticity_score'])
+        #             criticities = []
+        #             for d in filtered_devices:
+        #                 device_id = d[0]
+        #                 score_data = score_lookup.get(device_id)
+        #                 if score_data and score_data['criticity_score'] is not None:
+        #                     criticities.append(score_data['criticity_score'])
     
-                    if criticities:
-                        criticity_ranges = {
-                            "Very Low (0-2)": sum(1 for c in criticities if 0 <= c <= 2),
-                            "Low (2-4)": sum(1 for c in criticities if 2 <= c <= 4),
-                            "Medium (4-6)": sum(1 for c in criticities if 4 < c <= 6),
-                            "High (6-8)": sum(1 for c in criticities if 6 < c <= 8),
-                            "Very High (8-10)": sum(1 for c in criticities if 8 < c <= 10)
-                        }
+        #             if criticities:
+        #                 criticity_ranges = {
+        #                     "Very Low (0-2)": sum(1 for c in criticities if 0 <= c <= 2),
+        #                     "Low (2-4)": sum(1 for c in criticities if 2 <= c <= 4),
+        #                     "Medium (4-6)": sum(1 for c in criticities if 4 < c <= 6),
+        #                     "High (6-8)": sum(1 for c in criticities if 6 < c <= 8),
+        #                     "Very High (8-10)": sum(1 for c in criticities if 8 < c <= 10)
+        #                 }
         
-                        # Rimuovi categorie con valore 0 per il grafico a torta
-                        criticity_ranges = {k: v for k, v in criticity_ranges.items() if v > 0}
+        #                 # Rimuovi categorie con valore 0 per il grafico a torta
+        #                 criticity_ranges = {k: v for k, v in criticity_ranges.items() if v > 0}
         
-                        fig = go.Figure(data=[
-                            go.Pie(
-                                labels=list(criticity_ranges.keys()),
-                                values=list(criticity_ranges.values()),
-                                marker_colors=['#1a9641','#a6d96a', '#ffffbf', '#fdae61', '#d7191c'][:len(criticity_ranges)],
-                                textinfo='label+value+percent',
-                                textposition='auto',
-                                hovertemplate='<b>%{label}</b><br>Devices: %{value}<br>Percentage: %{percent}<extra></extra>'
-                            )
-                        ])
+        #                 fig = go.Figure(data=[
+        #                     go.Pie(
+        #                         labels=list(criticity_ranges.keys()),
+        #                         values=list(criticity_ranges.values()),
+        #                         marker_colors=['#1a9641','#a6d96a', '#ffffbf', '#fdae61', '#d7191c'][:len(criticity_ranges)],
+        #                         textinfo='label+value+percent',
+        #                         textposition='auto',
+        #                         hovertemplate='<b>%{label}</b><br>Devices: %{value}<br>Percentage: %{percent}<extra></extra>'
+        #                     )
+        #                 ])
         
-                        fig.update_layout(
-                            title="Criticity Distribution",
-                            height=400,
-                            showlegend=True,
-                            legend=dict(
-                                orientation="v",
-                                yanchor="middle",
-                                y=0.5,
-                                xanchor="left",
-                                x=1.01
-                            )
-                        )
+        #                 fig.update_layout(
+        #                     title="Criticity Distribution",
+        #                     height=400,
+        #                     showlegend=True,
+        #                     legend=dict(
+        #                         orientation="v",
+        #                         yanchor="middle",
+        #                         y=0.5,
+        #                         xanchor="left",
+        #                         x=1.01
+        #                     )
+        #                 )
         
-                        st.plotly_chart(fig, use_container_width=True)
-                    else:
-                        st.info("No criticity data available")
+        #                 st.plotly_chart(fig, use_container_width=True)
+        #             else:
+        #                 st.info("No criticity data available")
 
-                with chart_col2:
-                    st.write("**High & Very High Risk Devices**")
-                    high_risk_devices = []
+        #         with chart_col2:
+        #             st.write("**High & Very High Risk Devices**")
+        #             high_risk_devices = []
 
-                    for d in filtered_devices:
-                        device_id = d[0]
-                        score_data = score_lookup.get(device_id)
-                        location = location_lookup.get(device_id, {})
+        #             for d in filtered_devices:
+        #                 device_id = d[0]
+        #                 score_data = score_lookup.get(device_id)
+        #                 location = location_lookup.get(device_id, {})
                         
-                        if score_data and score_data['criticity_score'] is not None and score_data['criticity_score'] > 6.0:
-                            device_info = device_lookup.get(device_id, {})
-                            device_name = device_info.get('description', 'Unknown Device')
+        #                 if score_data and score_data['criticity_score'] is not None and score_data['criticity_score'] > 6.0:
+        #                     device_info = device_lookup.get(device_id, {})
+        #                     device_name = device_info.get('description', 'Unknown Device')
                             
-                            high_risk_devices.append({
-                                'Device description': device_name,
-                                'Serial Number': device_info.get('serial_number','N/A'),
-                                'Criticity': round(score_data['criticity_score'], 2),                              
-                                'Location': f"{location.get('room_name', 'N/A')} - {location.get('ward_name', 'N/A')}"
-                            })
+        #                     high_risk_devices.append({
+        #                         'Device description': device_name,
+        #                         'Serial Number': device_info.get('serial_number','N/A'),
+        #                         'Criticity': round(score_data['criticity_score'], 2),                              
+        #                         'Location': f"{location.get('room_name', 'N/A')} - {location.get('ward_name', 'N/A')}"
+        #                     })
 
-                    if high_risk_devices:
-                        risk_df = pd.DataFrame(high_risk_devices)
+        #             if high_risk_devices:
+        #                 risk_df = pd.DataFrame(high_risk_devices)
 
-                        def highlight_criticity(val):
-                            if val == "N/A":
-                                return ''
-                            try:
-                                v = float(val)
-                            except:
-                                return ''
-                            if v >= 8:
-                                return 'background-color: #ffe6e6; color: #cc0000'  # rosso
-                            elif v >= 6:
-                                return 'background-color: #fff2e6'  # arancio
-                            elif v >= 4:
-                                return 'background-color: #fffff0'  # giallo
-                            elif v >= 2:
-                                return 'background-color: #f0fff0'  # verde chiaro
-                            elif v >= 0:
-                                return 'background-color: #e6ffe6'  # verde scuro
-                            return ''
+        #                 def highlight_criticity(val):
+        #                     if val == "N/A":
+        #                         return ''
+        #                     try:
+        #                         v = float(val)
+        #                     except:
+        #                         return ''
+        #                     if v >= 8:
+        #                         return 'background-color: #ffe6e6; color: #cc0000'  # rosso
+        #                     elif v >= 6:
+        #                         return 'background-color: #fff2e6'  # arancio
+        #                     elif v >= 4:
+        #                         return 'background-color: #fffff0'  # giallo
+        #                     elif v >= 2:
+        #                         return 'background-color: #f0fff0'  # verde chiaro
+        #                     elif v >= 0:
+        #                         return 'background-color: #e6ffe6'  # verde scuro
+        #                     return ''
                         
-                        styled_df = risk_df.style.applymap(highlight_criticity, subset=['Criticity'])
+        #                 styled_df = risk_df.style.applymap(highlight_criticity, subset=['Criticity'])
                         
-                        st.dataframe(styled_df, hide_index=True, use_container_width=True)
-                        st.warning(f"⚠️ {len(high_risk_devices)} devices require attention!")
+        #                 st.dataframe(styled_df, hide_index=True, use_container_width=True)
+        #                 st.warning(f"⚠️ {len(high_risk_devices)} devices require attention!")
 
-                    else:
-                        st.success("✅ No high-risk devices found!")
+        #             else:
+        #                 st.success("✅ No high-risk devices found!")
 
 
                 
-            st.divider()
+        #     st.divider()
 
-            def categorize_device_by_type(description):
-                if not description:
-                    return 'Other'
+        #     def categorize_device_by_type(description):
+        #         if not description:
+        #             return 'Other'
 
-                desc_lower = description.lower()
+        #         desc_lower = description.lower()
 
-                if any(keyword in desc_lower for keyword in ['monitor', 'monitoring', 'display', 'screen']):
-                    return 'Monitor'
-                elif any(keyword in desc_lower for keyword in ['ecg', 'ekg', 'electrocardiogram', 'cardiac']):
-                    return 'ECG'
-                elif any(keyword in desc_lower for keyword in ['ventilator', 'ventilation', 'breathing', 'respiratory']):
-                    return 'Ventilator'
-                elif any(keyword in desc_lower for keyword in ['light', 'lamp', 'illumination', 'surgical light', 'ot light', 'operating']):
-                    return 'OT Light'
-                elif any(keyword in desc_lower for keyword in ['pump', 'infusion', 'syringe']):
-                    return 'Pump'
-                elif any(keyword in desc_lower for keyword in ['ultrasound', 'echo', 'doppler']):
-                    return 'Ultrasound'
-                elif any(keyword in desc_lower for keyword in ['xray', 'x-ray', 'radiograph']):
-                    return 'X-Ray'
-                elif any(keyword in desc_lower for keyword in ['defibrillator', 'defib']):
-                    return 'Defibrillator'
-                else:
-                    return 'Other'
-
-
-            # INIZIALIZZA LE VARIABILI
-            detailed_device_data = {}
-            device_data = {}
-
-            # Raccogli dati dettagliati per dispositivo
-            for d in filtered_devices:
-                device_id = d[0]
-                description = d[3] or 'Unknown'
-                brand = d[8] or 'N/A'
-                model = d[9] or 'N/A'
-                serial_number=d[12] or 'N/A'
-                score_data = score_lookup.get(device_id)
-
-                device_type = categorize_device_by_type(description)
-
-                if device_type not in device_data:
-                    device_data[device_type] = {
-                        'total': 0, 'very_low': 0, 'low': 0,
-                        'medium': 0, 'high': 0, 'very_high': 0
-                    }
-                    detailed_device_data[device_type] = {
-                        'very_low': [], 'low': [], 'medium': [], 'high': [], 'very_high': []
-                    }
-
-                device_data[device_type]['total'] += 1
-
-                if score_data and score_data['criticity_score'] is not None:
-                    location = location_lookup.get(device_id, {})
-                    roomname = location.get('room_name', 'N/A')
-                    wardname = location.get('ward_name', 'N/A')
-                    criticity_score = score_data['criticity_score']
-                    device_info = {
-                        'id': device_id,
-                        'description': description,
-                        'serial number': serial_number,
-                        'brand': brand,
-                        'room': roomname,
-                        'ward': wardname,
-                        'model': model,
-                        'criticity': round(criticity_score, 2)
-                    }
-
-                    if 0 <= criticity_score <= 2:
-                        device_data[device_type]['very_low'] += 1
-                        detailed_device_data[device_type]['very_low'].append(device_info)
-                    elif 2 < criticity_score <= 4:
-                        device_data[device_type]['low'] += 1
-                        detailed_device_data[device_type]['low'].append(device_info)
-                    elif 4 < criticity_score <= 6:
-                        device_data[device_type]['medium'] += 1
-                        detailed_device_data[device_type]['medium'].append(device_info)
-                    elif 6 < criticity_score <= 8:
-                        device_data[device_type]['high'] += 1
-                        detailed_device_data[device_type]['high'].append(device_info)
-                    elif 8 < criticity_score <= 10:
-                        device_data[device_type]['very_high'] += 1
-                        detailed_device_data[device_type]['very_high'].append(device_info)
+        #         if any(keyword in desc_lower for keyword in ['monitor', 'monitoring', 'display', 'screen']):
+        #             return 'Monitor'
+        #         elif any(keyword in desc_lower for keyword in ['ecg', 'ekg', 'electrocardiogram', 'cardiac']):
+        #             return 'ECG'
+        #         elif any(keyword in desc_lower for keyword in ['ventilator', 'ventilation', 'breathing', 'respiratory']):
+        #             return 'Ventilator'
+        #         elif any(keyword in desc_lower for keyword in ['light', 'lamp', 'illumination', 'surgical light', 'ot light', 'operating']):
+        #             return 'OT Light'
+        #         elif any(keyword in desc_lower for keyword in ['pump', 'infusion', 'syringe']):
+        #             return 'Pump'
+        #         elif any(keyword in desc_lower for keyword in ['ultrasound', 'echo', 'doppler']):
+        #             return 'Ultrasound'
+        #         elif any(keyword in desc_lower for keyword in ['xray', 'x-ray', 'radiograph']):
+        #             return 'X-Ray'
+        #         elif any(keyword in desc_lower for keyword in ['defibrillator', 'defib']):
+        #             return 'Defibrillator'
+        #         else:
+        #             return 'Other'
 
 
-            # VISUALIZZAZIONE
-            if device_data:
-                risk_levels = ['very_high', 'high', 'medium', 'low', 'very_low']
-                risk_names = {
-                    'very_high': 'Very High Risk (8-10)',
-                    'high': 'High Risk (6-8)',
-                    'medium': 'Medium Risk (4-6)',
-                    'low': 'Low Risk (2-4)',
-                    'very_low': 'Very Low Risk (0-2)'
-                }
-                colors = {
-                    'very_high': '#d7191c',   # rosso intenso
-                    'high': '#fdae61',        # arancio
-                    'medium': "#ffffbf",      # giallo chiaro
-                    'low': '#a6d96a',         # verde chiaro
-                    'very_low': '#1a9641'     # verde scuro
-                }
+        #     # INIZIALIZZA LE VARIABILI
+        #     detailed_device_data = {}
+        #     device_data = {}
 
-                device_types = list(device_data.keys())
+        #     # Raccogli dati dettagliati per dispositivo
+        #     for d in filtered_devices:
+        #         device_id = d[0]
+        #         description = d[3] or 'Unknown'
+        #         brand = d[8] or 'N/A'
+        #         model = d[9] or 'N/A'
+        #         serial_number=d[12] or 'N/A'
+        #         score_data = score_lookup.get(device_id)
 
-                fig = go.Figure()
+        #         device_type = categorize_device_by_type(description)
 
-                for risk_level in risk_levels:
-                    # Prepara hover con lista dispositivi
-                    hover_texts = []
-                    for dt in device_types:
-                        devices = detailed_device_data[dt][risk_level]
-                        if devices:
-                            details = "<br>".join([f"- {dev['description']} ({dev['brand']} {dev['model']})"
-                                                for dev in devices[:5]])  # max 5 per non fare muro di testo
-                            if len(devices) > 5:
-                                details += f"<br>...and {len(devices)-5} more"
-                            hover_texts.append(details)
-                        else:
-                            hover_texts.append("No devices")
+        #         if device_type not in device_data:
+        #             device_data[device_type] = {
+        #                 'total': 0, 'very_low': 0, 'low': 0,
+        #                 'medium': 0, 'high': 0, 'very_high': 0
+        #             }
+        #             detailed_device_data[device_type] = {
+        #                 'very_low': [], 'low': [], 'medium': [], 'high': [], 'very_high': []
+        #             }
 
-                    fig.add_trace(go.Bar(
-                        name=risk_names[risk_level],
-                        y=device_types,
-                        x=[device_data[dt][risk_level] for dt in device_types],
-                        orientation='h',
-                        marker_color=colors[risk_level],
-                        text=[device_data[dt][risk_level] if device_data[dt][risk_level] > 0 else '' for dt in device_types],
-                        textposition="inside",
-                        hovertext=hover_texts,
-                        hoverinfo="text+x+name"
-                    ))
+        #         device_data[device_type]['total'] += 1
 
-                fig.update_layout(
-                    title="Criticity Analysis by Device Type",
-                    barmode='stack',
-                    height=600,
-                    yaxis=dict(title="Device Type", automargin=True),
-                    xaxis=dict(title="Number of Devices"),
-                    legend=dict(
-                        orientation="h",
-                        yanchor="bottom",
-                        y=1.02,
-                        xanchor="center",
-                        x=0.5
-                    ),
-                    plot_bgcolor="white",
-                    paper_bgcolor="white"
-                )
+        #         if score_data and score_data['criticity_score'] is not None:
+        #             location = location_lookup.get(device_id, {})
+        #             roomname = location.get('room_name', 'N/A')
+        #             wardname = location.get('ward_name', 'N/A')
+        #             criticity_score = score_data['criticity_score']
+        #             device_info = {
+        #                 'id': device_id,
+        #                 'description': description,
+        #                 'serial number': serial_number,
+        #                 'brand': brand,
+        #                 'room': roomname,
+        #                 'ward': wardname,
+        #                 'model': model,
+        #                 'criticity': round(criticity_score, 2)
+        #             }
 
-                st.plotly_chart(fig, use_container_width=True)
+        #             if 0 <= criticity_score <= 2:
+        #                 device_data[device_type]['very_low'] += 1
+        #                 detailed_device_data[device_type]['very_low'].append(device_info)
+        #             elif 2 < criticity_score <= 4:
+        #                 device_data[device_type]['low'] += 1
+        #                 detailed_device_data[device_type]['low'].append(device_info)
+        #             elif 4 < criticity_score <= 6:
+        #                 device_data[device_type]['medium'] += 1
+        #                 detailed_device_data[device_type]['medium'].append(device_info)
+        #             elif 6 < criticity_score <= 8:
+        #                 device_data[device_type]['high'] += 1
+        #                 detailed_device_data[device_type]['high'].append(device_info)
+        #             elif 8 < criticity_score <= 10:
+        #                 device_data[device_type]['very_high'] += 1
+        #                 detailed_device_data[device_type]['very_high'].append(device_info)
 
-                # --- Dettagli con selectbox
-                st.write("### Explore Device Details")
 
-                col1, col2 = st.columns(2)
-                with col1:
-                    selected_type = st.selectbox(
-                        "Select Device Type:",
-                        options=list(device_data.keys()),
-                        key="device_type_select_chart1"
-                    )
+        #     # VISUALIZZAZIONE
+        #     if device_data:
+        #         risk_levels = ['very_high', 'high', 'medium', 'low', 'very_low']
+        #         risk_names = {
+        #             'very_high': 'Very High Risk (8-10)',
+        #             'high': 'High Risk (6-8)',
+        #             'medium': 'Medium Risk (4-6)',
+        #             'low': 'Low Risk (2-4)',
+        #             'very_low': 'Very Low Risk (0-2)'
+        #         }
+        #         colors = {
+        #             'very_high': '#d7191c',   # rosso intenso
+        #             'high': '#fdae61',        # arancio
+        #             'medium': "#ffffbf",      # giallo chiaro
+        #             'low': '#a6d96a',         # verde chiaro
+        #             'very_low': '#1a9641'     # verde scuro
+        #         }
 
-                with col2:
-                    selected_risk = st.selectbox(
-                        "Select Risk Level:",
-                        options=risk_levels,
-                        format_func=lambda x: risk_names[x],
-                        key="risk_level_select_chart1"
-                    )
+        #         device_types = list(device_data.keys())
 
-                if selected_type and selected_risk:
-                    devices = detailed_device_data[selected_type][selected_risk]
-                    if selected_type and selected_risk:
-                        devices = detailed_device_data[selected_type][selected_risk]
-                        if devices:
-                            st.write(f"**{risk_names[selected_risk]} {selected_type} Devices ({len(devices)} total):**")
+        #         fig = go.Figure()
+
+        #         for risk_level in risk_levels:
+        #             # Prepara hover con lista dispositivi
+        #             hover_texts = []
+        #             for dt in device_types:
+        #                 devices = detailed_device_data[dt][risk_level]
+        #                 if devices:
+        #                     details = "<br>".join([f"- {dev['description']} ({dev['brand']} {dev['model']})"
+        #                                         for dev in devices[:5]])  # max 5 per non fare muro di testo
+        #                     if len(devices) > 5:
+        #                         details += f"<br>...and {len(devices)-5} more"
+        #                     hover_texts.append(details)
+        #                 else:
+        #                     hover_texts.append("No devices")
+
+        #             fig.add_trace(go.Bar(
+        #                 name=risk_names[risk_level],
+        #                 y=device_types,
+        #                 x=[device_data[dt][risk_level] for dt in device_types],
+        #                 orientation='h',
+        #                 marker_color=colors[risk_level],
+        #                 text=[device_data[dt][risk_level] if device_data[dt][risk_level] > 0 else '' for dt in device_types],
+        #                 textposition="inside",
+        #                 hovertext=hover_texts,
+        #                 hoverinfo="text+x+name"
+        #             ))
+
+        #         fig.update_layout(
+        #             title="Criticity Analysis by Device Type",
+        #             barmode='stack',
+        #             height=600,
+        #             yaxis=dict(title="Device Type", automargin=True),
+        #             xaxis=dict(title="Number of Devices"),
+        #             legend=dict(
+        #                 orientation="h",
+        #                 yanchor="bottom",
+        #                 y=1.02,
+        #                 xanchor="center",
+        #                 x=0.5
+        #             ),
+        #             plot_bgcolor="white",
+        #             paper_bgcolor="white"
+        #         )
+
+        #         st.plotly_chart(fig, use_container_width=True)
+
+        #         # --- Dettagli con selectbox
+        #         st.write("### Explore Device Details")
+
+        #         col1, col2 = st.columns(2)
+        #         with col1:
+        #             selected_type = st.selectbox(
+        #                 "Select Device Type:",
+        #                 options=list(device_data.keys()),
+        #                 key="device_type_select_chart1"
+        #             )
+
+        #         with col2:
+        #             selected_risk = st.selectbox(
+        #                 "Select Risk Level:",
+        #                 options=risk_levels,
+        #                 format_func=lambda x: risk_names[x],
+        #                 key="risk_level_select_chart1"
+        #             )
+
+        #         if selected_type and selected_risk:
+        #             devices = detailed_device_data[selected_type][selected_risk]
+        #             if selected_type and selected_risk:
+        #                 devices = detailed_device_data[selected_type][selected_risk]
+        #                 if devices:
+        #                     st.write(f"**{risk_names[selected_risk]} {selected_type} Devices ({len(devices)} total):**")
                             
                         
                             
-                            df_details = pd.DataFrame([
-                                {
-                                    'Serial number': dev['serial number'],  # Potrebbe essere 'serial_number' o 'udi_number'?
-                                    'Description': dev['description'],
-                                    'Brand': dev['brand'],
-                                    'Model': dev['model'],
-                                    'Location': f"{dev['room']} - {dev['ward']}",
-                                    'Criticity Score': dev['criticity']
-                                }
-                                for dev in devices
-                            ])
-                            st.dataframe(df_details, use_container_width=True, hide_index=True)
-                    else:
-                        st.info(f"No {selected_type} devices in {risk_names[selected_risk]} category")
+        #                     df_details = pd.DataFrame([
+        #                         {
+        #                             'Serial number': dev['serial number'],  # Potrebbe essere 'serial_number' o 'udi_number'?
+        #                             'Description': dev['description'],
+        #                             'Brand': dev['brand'],
+        #                             'Model': dev['model'],
+        #                             'Location': f"{dev['room']} - {dev['ward']}",
+        #                             'Criticity Score': dev['criticity']
+        #                         }
+        #                         for dev in devices
+        #                     ])
+        #                     st.dataframe(df_details, use_container_width=True, hide_index=True)
+        #             else:
+        #                 st.info(f"No {selected_type} devices in {risk_names[selected_risk]} category")
 
-                else:
-                    st.info("No device data available for risk analysis")
-            else:
-                st.warning("No scoring data available. Please run fuzzy logic analysis first.")
+        #         else:
+        #             st.info("No device data available for risk analysis")
+        #     else:
+        #         st.warning("No scoring data available. Please run fuzzy logic analysis first.")
 
 
         with tab3:
