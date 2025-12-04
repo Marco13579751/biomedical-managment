@@ -1238,110 +1238,110 @@ def show_prioritization_score_page():
 
     with tab1:
     
-        # OTTIMIZZAZIONE: carica tutto con 1 query invece di 470+
-        all_devices_with_scores = get_all_devices_with_scores_optimized()
-        all_devices = get_all_devices()
-        rooms = get_all_rooms()
-        wards = get_all_wards()
+        # # OTTIMIZZAZIONE: carica tutto con 1 query invece di 470+
+        # all_devices_with_scores = get_all_devices_with_scores_optimized()
+        # all_devices = get_all_devices()
+        # rooms = get_all_rooms()
+        # wards = get_all_wards()
         
  
 
-        ward_options = {"All": "All Wards"}
-        ward_options.update({str(w[0]): w[1] for w in wards})
+        # ward_options = {"All": "All Wards"}
+        # ward_options.update({str(w[0]): w[1] for w in wards})
 
-        room_options = {"All": "All Rooms"}
-        room_options.update({f"{r[0]}": f"Floor {r[1]} - {r[2]}" for r in rooms})
+        # room_options = {"All": "All Rooms"}
+        # room_options.update({f"{r[0]}": f"Floor {r[1]} - {r[2]}" for r in rooms})
 
-        col1, col2, col3 = st.columns(3)
+        # col1, col2, col3 = st.columns(3)
 
-        with col1:
-            selected_ward = st.selectbox(
-                "Filter by Ward:",
-                options=list(ward_options.keys()),
-                format_func=lambda x: ward_options[x],key='c'
-            )
+        # with col1:
+        #     selected_ward = st.selectbox(
+        #         "Filter by Ward:",
+        #         options=list(ward_options.keys()),
+        #         format_func=lambda x: ward_options[x],key='c'
+        #     )
 
-        with col2:
-            if selected_ward != "All":
-                filtered_rooms = [r for r in rooms if r[3] == int(selected_ward)]
-                room_filter_options = {"All": "All Rooms in Ward"}
-                room_filter_options.update({f"{r[0]}": f"Floor {r[1]} - {r[2]}" for r in filtered_rooms})
-            else:
-                room_filter_options = room_options
+        # with col2:
+        #     if selected_ward != "All":
+        #         filtered_rooms = [r for r in rooms if r[3] == int(selected_ward)]
+        #         room_filter_options = {"All": "All Rooms in Ward"}
+        #         room_filter_options.update({f"{r[0]}": f"Floor {r[1]} - {r[2]}" for r in filtered_rooms})
+        #     else:
+        #         room_filter_options = room_options
         
-            selected_room = st.selectbox(
-                "Filter by Room:",
-                options=list(room_filter_options.keys()),
-                format_func=lambda x: room_filter_options[x], key='d'
-            )
+        #     selected_room = st.selectbox(
+        #         "Filter by Room:",
+        #         options=list(room_filter_options.keys()),
+        #         format_func=lambda x: room_filter_options[x], key='d'
+        #     )
 
-        with col3:
-            search = st.text_input("🔍 Search devices:", placeholder="Search by ID, description, brand....")
+        # with col3:
+        #     search = st.text_input("🔍 Search devices:", placeholder="Search by ID, description, brand....")
 
-        filtered_devices = []
+        # filtered_devices = []
 
-        for d in all_devices:
-            device_id, parent_id, room_id, description, device_class, usage_type, cost_inr, present, brand, model, install_date, udi, serial_number, manufacturer_date, gmdn = d
+        # for d in all_devices:
+        #     device_id, parent_id, room_id, description, device_class, usage_type, cost_inr, present, brand, model, install_date, udi, serial_number, manufacturer_date, gmdn = d
     
-            device_room = next((r for r in rooms if r[0] == room_id), None)
+        #     device_room = next((r for r in rooms if r[0] == room_id), None)
     
-            if selected_ward != "All":
-                if not device_room or device_room[3] != int(selected_ward):
-                    continue
+        #     if selected_ward != "All":
+        #         if not device_room or device_room[3] != int(selected_ward):
+        #             continue
     
-            if selected_room != "All":
-                if str(room_id) != selected_room:
-                    continue
+        #     if selected_room != "All":
+        #         if str(room_id) != selected_room:
+        #             continue
     
-            if search:
-                search_lower = search.lower()
-                room_info = f"Floor {device_room[1]} - {device_room[2]}" if device_room else ""
+        #     if search:
+        #         search_lower = search.lower()
+        #         room_info = f"Floor {device_room[1]} - {device_room[2]}" if device_room else ""
         
-                search_text = f"{serial_number} {description} {brand} {model} {room_info}".lower()
-                if search_lower not in search_text:
-                    continue
+        #         search_text = f"{serial_number} {description} {brand} {model} {room_info}".lower()
+        #         if search_lower not in search_text:
+        #             continue
     
-            filtered_devices.append(d)
+        #     filtered_devices.append(d)
 
-        if not filtered_devices:
-            st.info("No devices found with the selected filters")
-            st.stop()
+        # if not filtered_devices:
+        #     st.info("No devices found with the selected filters")
+        #     st.stop()
 
-        if filtered_devices:
-            if search or selected_ward != "All" or selected_room != "All":
-                active_filters = []
-                if selected_ward != "All":
-                    active_filters.append(f"Ward: {ward_options[selected_ward]}")
-                if selected_room!= "All":
-                    active_filters.append(f"Room: {room_filter_options[selected_room]}")
-                if search:
-                    active_filters.append(f"Search: '{search}'")
+        # if filtered_devices:
+        #     if search or selected_ward != "All" or selected_room != "All":
+        #         active_filters = []
+        #         if selected_ward != "All":
+        #             active_filters.append(f"Ward: {ward_options[selected_ward]}")
+        #         if selected_room!= "All":
+        #             active_filters.append(f"Room: {room_filter_options[selected_room]}")
+        #         if search:
+        #             active_filters.append(f"Search: '{search}'")
         
-                filter_text = " | ".join(active_filters)
-                st.success(f"Showing {len(filtered_devices)} device(s) with filters: {filter_text}")
-               # Crea lookup veloci per evitare query ripetute
-        score_lookup = {}
-        location_lookup = {}
+        #         filter_text = " | ".join(active_filters)
+        #         st.success(f"Showing {len(filtered_devices)} device(s) with filters: {filter_text}")
+        #        # Crea lookup veloci per evitare query ripetute
+        # score_lookup = {}
+        # location_lookup = {}
         
-        for row in all_devices_with_scores:
-            device_id = row[0]
-            # Salva score se presente
-            if row[17] is not None:  # se ha criticity_score
-                score_lookup[device_id] = {
-                    'criticity_score': row[17],
-                    'supp_score': row[18],
-                    'miss_score': row[19],
-                    'vulnerability_score': row[20],
-                    'eq_function': row[21],
-                    'age_years': row[22],
-                    'downtime': row[23],
-                    'assessment_date': row[24]
-                }
-            # Salva location
-            location_lookup[device_id] = {
-                'room_name': row[15],
-                'ward_name': row[16]
-            }
+        # for row in all_devices_with_scores:
+        #     device_id = row[0]
+        #     # Salva score se presente
+        #     if row[17] is not None:  # se ha criticity_score
+        #         score_lookup[device_id] = {
+        #             'criticity_score': row[17],
+        #             'supp_score': row[18],
+        #             'miss_score': row[19],
+        #             'vulnerability_score': row[20],
+        #             'eq_function': row[21],
+        #             'age_years': row[22],
+        #             'downtime': row[23],
+        #             'assessment_date': row[24]
+        #         }
+        #     # Salva location
+        #     location_lookup[device_id] = {
+        #         'room_name': row[15],
+        #         'ward_name': row[16]
+        #     }
         tab1, tab2, tab3 = st.tabs(["Overview Table", "Score Analytics", "Financial Analysis"])
 
 #         # LOGICA UNIFICATA - Creazione dati una sola volta
