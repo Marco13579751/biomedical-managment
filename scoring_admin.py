@@ -1342,7 +1342,7 @@ def show_prioritization_score_page():
         #         'room_name': row[15],
         #         'ward_name': row[16]
         #     }
-        tab1, tab2, tab3 = st.tabs(["Overview Table", "Score Analytics", "Financial Analysis"])
+        # tab1, tab2, tab3 = st.tabs(["Overview Table", "Score Analytics", "Financial Analysis"])
 
 #         # LOGICA UNIFICATA - Creazione dati una sola volta
 #         df_data = []
