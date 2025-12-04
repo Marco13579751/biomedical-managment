@@ -1344,143 +1344,143 @@ def show_prioritization_score_page():
             }
         tab1, tab2, tab3 = st.tabs(["Overview Table", "Score Analytics", "Financial Analysis"])
 
-        # LOGICA UNIFICATA - Creazione dati una sola volta
-        df_data = []
-        valid_scores = []
-        device_lookup = {}
+#         # LOGICA UNIFICATA - Creazione dati una sola volta
+#         df_data = []
+#         valid_scores = []
+#         device_lookup = {}
 
-        for d in filtered_devices:
-            device_id, parent_id, room_id, description, device_class, usage_type, cost_inr, present, brand, model, install_date, udi, serial_number, manufacturer_date, gmdn = d
+#         for d in filtered_devices:
+#             device_id, parent_id, room_id, description, device_class, usage_type, cost_inr, present, brand, model, install_date, udi, serial_number, manufacturer_date, gmdn = d
 
-            device_lookup[device_id] = {
-                'description': description,
-                'brand': brand,
-                'model': model,
-                'usage_type': usage_type,
-                'room_id': room_id,
-                'cost_inr': cost_inr,
-                'device_class': device_class,
-                'serial_number': serial_number
-            }
+#             device_lookup[device_id] = {
+#                 'description': description,
+#                 'brand': brand,
+#                 'model': model,
+#                 'usage_type': usage_type,
+#                 'room_id': room_id,
+#                 'cost_inr': cost_inr,
+#                 'device_class': device_class,
+#                 'serial_number': serial_number
+#             }
 
-            # Usa lookup invece di query
-            score_data = score_lookup.get(device_id)
-            breakd=get_breakdown_by_id_last(device_id)
+#             # Usa lookup invece di query
+#             score_data = score_lookup.get(device_id)
+#             breakd=get_breakdown_by_id_last(device_id)
 
-            # Calculate age_years
-            oggi = dtm.date.today()
-            age_years = None
-            if manufacturer_date is not None:
-                age_years = (oggi - manufacturer_date).days / 365
-            elif install_date is not None:
-                age_years = (oggi - install_date).days / 365
+#             # Calculate age_years
+#             oggi = dtm.date.today()
+#             age_years = None
+#             if manufacturer_date is not None:
+#                 age_years = (oggi - manufacturer_date).days / 365
+#             elif install_date is not None:
+#                 age_years = (oggi - install_date).days / 365
 
-            # *** CONTROLLO NULL PRINCIPALE - Se score è None, salta i calcoli complessi ***
-            # *** CONTROLLO NULL PRINCIPALE - Se score_data è None, salta i calcoli complessi ***
-            if score_data is None:
-                # Dispositivo senza scoring parameters - crea row con valori N/A
-                row_data = {
-                    'Description': description or 'N/A',
-                    'Brand': brand or 'N/A',
-                    'Model': model or 'N/A',
-                    'Fuzzy Criticity': 'N/A',
-                    'RPV1 Criticity': 'N/A',
-                    'Mission Score': 'N/A',
-                    'Support Score': 'N/A',
-                    'Age (years)': f"{age_years:.1f}" if age_years is not None else 'N/A',
-                    'Usage Types': 'N/A',
-                    'Current downtime (days)': 'N/A',
-                    'Type of service': breakd[14] if breakd and breakd[14] is not None else 'N/A',
-                    'Service supoprt': 'N/A',
-                    'Spare parts availability': 'N/A',
-                    'Backup Available': 'N/A',
-                    'Ward': ward_options.get(str(next((r[3] for r in rooms if r[0] == room_id), None)), 'N/A') if room_id else 'N/A',
-                    'Room': room_options.get(str(room_id), 'N/A') if room_id else 'N/A'
-                }
-                df_data.append(row_data)
-                continue  # Skip to next device
-# *** SE ARRIVIAMO QUI, score_data NON è None ***
-            # Ricostruisci tuple "score" per compatibilità con codice esistente
-            score = (
-                None,  # parameter_id
-                device_id,
-                score_data['assessment_date'],
-                score_data['age_years'],
-                score_data['downtime'],
-                None,  # service_availability
-                None,  # spare_parts_availability
-                None,  # backup
-                score_data['eq_function'],
-                None,  # cumulative_maintenance
-                score_data['miss_score'],
-                score_data['supp_score'],
-                score_data['criticity_score']
-            )
-            # *** SE ARRIVIAMO QUI, score NON è None ***
-            back = 'N/A'
-            if score[7] is not None:
-                if score[7] == 2:
-                    back = ">=3"
-                elif score[7] == 1:
-                    back = "1-2"
-                elif score[7] == 0:
-                    back = "0"
+#             # *** CONTROLLO NULL PRINCIPALE - Se score è None, salta i calcoli complessi ***
+#             # *** CONTROLLO NULL PRINCIPALE - Se score_data è None, salta i calcoli complessi ***
+#             if score_data is None:
+#                 # Dispositivo senza scoring parameters - crea row con valori N/A
+#                 row_data = {
+#                     'Description': description or 'N/A',
+#                     'Brand': brand or 'N/A',
+#                     'Model': model or 'N/A',
+#                     'Fuzzy Criticity': 'N/A',
+#                     'RPV1 Criticity': 'N/A',
+#                     'Mission Score': 'N/A',
+#                     'Support Score': 'N/A',
+#                     'Age (years)': f"{age_years:.1f}" if age_years is not None else 'N/A',
+#                     'Usage Types': 'N/A',
+#                     'Current downtime (days)': 'N/A',
+#                     'Type of service': breakd[14] if breakd and breakd[14] is not None else 'N/A',
+#                     'Service supoprt': 'N/A',
+#                     'Spare parts availability': 'N/A',
+#                     'Backup Available': 'N/A',
+#                     'Ward': ward_options.get(str(next((r[3] for r in rooms if r[0] == room_id), None)), 'N/A') if room_id else 'N/A',
+#                     'Room': room_options.get(str(room_id), 'N/A') if room_id else 'N/A'
+#                 }
+#                 df_data.append(row_data)
+#                 continue  # Skip to next device
+# # *** SE ARRIVIAMO QUI, score_data NON è None ***
+#             # Ricostruisci tuple "score" per compatibilità con codice esistente
+#             score = (
+#                 None,  # parameter_id
+#                 device_id,
+#                 score_data['assessment_date'],
+#                 score_data['age_years'],
+#                 score_data['downtime'],
+#                 None,  # service_availability
+#                 None,  # spare_parts_availability
+#                 None,  # backup
+#                 score_data['eq_function'],
+#                 None,  # cumulative_maintenance
+#                 score_data['miss_score'],
+#                 score_data['supp_score'],
+#                 score_data['criticity_score']
+#             )
+#             # *** SE ARRIVIAMO QUI, score NON è None ***
+#             back = 'N/A'
+#             if score[7] is not None:
+#                 if score[7] == 2:
+#                     back = ">=3"
+#                 elif score[7] == 1:
+#                     back = "1-2"
+#                 elif score[7] == 0:
+#                     back = "0"
     
-            life = 'N/A'
+#             life = 'N/A'
 
     
-            parts = 'N/A'
-            if score[6] is not None:
-                if score[6] == 0:
-                    parts = "No"
-                elif score[6] == 1:
-                    parts = "Yes"
+#             parts = 'N/A'
+#             if score[6] is not None:
+#                 if score[6] == 0:
+#                     parts = "No"
+#                 elif score[6] == 1:
+#                     parts = "Yes"
 
-            eq1='N/A'
-            if score[8] is not None:
-                if score[8]==1:
-                    eq1="Analytical/Support"
-                elif score[8]==2:
-                    eq1="Diagnostic"
-                elif score[8]==3:
-                    eq1="Therapeutic"
-                elif score[8]==4:
-                    eq1="Life Saving/Life Support"
+#             eq1='N/A'
+#             if score[8] is not None:
+#                 if score[8]==1:
+#                     eq1="Analytical/Support"
+#                 elif score[8]==2:
+#                     eq1="Diagnostic"
+#                 elif score[8]==3:
+#                     eq1="Therapeutic"
+#                 elif score[8]==4:
+#                     eq1="Life Saving/Life Support"
             
-            # Calculate RPV only if all required values are not None
-            rpv = None
-            if score[4] is not None and score[3] is not None and score[8] is not None and score[5] is not None:
-                x2 = 1 if score[4] > 3 else 0
-                x1 = 1 if score[3] > 10 else 0
-                x3 = int(score[8])
-                x4 = 0 if score[5] == 1 else 1
-                rpv = 9*(x1+x2) + 7.5*x3 + 25*x4
+#             # Calculate RPV only if all required values are not None
+#             rpv = None
+#             if score[4] is not None and score[3] is not None and score[8] is not None and score[5] is not None:
+#                 x2 = 1 if score[4] > 3 else 0
+#                 x1 = 1 if score[3] > 10 else 0
+#                 x3 = int(score[8])
+#                 x4 = 0 if score[5] == 1 else 1
+#                 rpv = 9*(x1+x2) + 7.5*x3 + 25*x4
 
-            # Aggiungi a valid_scores se ha score record (anche con NULL)
-            # Questo serve per le altre analisi (operational, financial)
-            valid_scores.append((device_id, score, age_years, cost_inr))
+#             # Aggiungi a valid_scores se ha score record (anche con NULL)
+#             # Questo serve per le altre analisi (operational, financial)
+#             valid_scores.append((device_id, score, age_years, cost_inr))
 
-            row_data = {
-                'Description': description or 'N/A',
-                'Brand': brand or 'N/A',
-                'Model': model or 'N/A',
-                'Serial number': serial_number or 'N/A',
-                'Fuzzy Criticity': round(score[12], 2) if score[12] is not None else 'N/A',
-                'RPV1 Criticity': rpv if rpv is not None else 'N/A',
-                'Mission Score': round(score[10], 2) if score[10] is not None else 'N/A',
-                'Support Score': round(score[11], 2) if score[11] is not None else 'N/A',
-                'Age (years)': f"{score[3]:.1f}" if score[3] is not None else 'N/A',
-                'Usage Types': eq1 or "N/A",
-                'Current downtime (days)': round(score[4], 1) if score[4] is not None else 'N/A',
-                'Type of service': breakd[14] if breakd and breakd[14] is not None else 'N/A',
-                'Service supoprt': 'Yes' if score[5] == 1 else 'No' if score[5] is not None else 'N/A',
-                'Spare parts availability': 'Yes' if score[6] == 1 else 'No' if score[6] is not None else 'N/A',
-                'Backup Available': back,
-                'Ward': location_lookup.get(device_id, {}).get('ward_name', 'N/A'),
-                'Room': location_lookup.get(device_id, {}).get('room_name', 'N/A')
-            }
+#             row_data = {
+#                 'Description': description or 'N/A',
+#                 'Brand': brand or 'N/A',
+#                 'Model': model or 'N/A',
+#                 'Serial number': serial_number or 'N/A',
+#                 'Fuzzy Criticity': round(score[12], 2) if score[12] is not None else 'N/A',
+#                 'RPV1 Criticity': rpv if rpv is not None else 'N/A',
+#                 'Mission Score': round(score[10], 2) if score[10] is not None else 'N/A',
+#                 'Support Score': round(score[11], 2) if score[11] is not None else 'N/A',
+#                 'Age (years)': f"{score[3]:.1f}" if score[3] is not None else 'N/A',
+#                 'Usage Types': eq1 or "N/A",
+#                 'Current downtime (days)': round(score[4], 1) if score[4] is not None else 'N/A',
+#                 'Type of service': breakd[14] if breakd and breakd[14] is not None else 'N/A',
+#                 'Service supoprt': 'Yes' if score[5] == 1 else 'No' if score[5] is not None else 'N/A',
+#                 'Spare parts availability': 'Yes' if score[6] == 1 else 'No' if score[6] is not None else 'N/A',
+#                 'Backup Available': back,
+#                 'Ward': location_lookup.get(device_id, {}).get('ward_name', 'N/A'),
+#                 'Room': location_lookup.get(device_id, {}).get('room_name', 'N/A')
+#             }
 
-            df_data.append(row_data)
+#             df_data.append(row_data)
 
 
         with tab1:
