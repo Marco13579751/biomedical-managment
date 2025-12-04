@@ -1483,152 +1483,154 @@ def show_prioritization_score_page():
 #             df_data.append(row_data)
 
 
-        # with tab1:
-        #     try:
-        #         cur.execute("SELECT COUNT(*) FROM scoring_parameters")
-        #         scoring_count = cur.fetchone()[0]
+        with tab1:
+            try:
+                cur.execute("SELECT COUNT(*) FROM scoring_parameters")
+                scoring_count = cur.fetchone()[0]
 
-        #         if scoring_count > 0:
+                if scoring_count > 0:
                     
 
-        #             # Ora crea le colonne - il CSS si applicherà alle metriche
-        #             col1, col2 = st.columns(2)
+                    # Ora crea le colonne - il CSS si applicherà alle metriche
+                    col1, col2 = st.columns(2)
 
-        #             with col1:
-        #                 high_risk_count = 0
-        #                 for d in filtered_devices:
-        #                     device_id = d[0]
-        #                     score_data = score_lookup.get(device_id)
-        #                     if score_data and score_data['criticity_score'] is not None and score_data['criticity_score'] > 6:
-        #                         high_risk_count += 1
+                    with col1:
+                        high_risk_count = 0
+                        for d in filtered_devices:
+                            device_id = d[0]
+                            score_data = score_lookup.get(device_id)
+                            if score_data and score_data['criticity_score'] is not None and score_data['criticity_score'] > 6:
+                                high_risk_count += 1
     
-        #                 st.metric("High Risk Devices", value=high_risk_count,
-        #                            delta="⚠️ Need Action" if high_risk_count > 0 else "✅ All Good",delta_color="inverse")
+                        st.metric("High Risk Devices", value=high_risk_count,
+                                   delta="⚠️ Need Action" if high_risk_count > 0 else "✅ All Good",delta_color="inverse")
 
-        #             with col2:
-        #                 # Conta solo dispositivi con score effettivamente calcolati (criticity_score non NULL)
-        #                 analyzed_devices = 0
-        #                 for d in filtered_devices:
-        #                     device_id = d[0]
-        #                     score_data = score_lookup.get(device_id)
-        #                     if score_data and score_data['criticity_score'] is not None:
-        #                         analyzed_devices += 1
+                    with col2:
+                        # Conta solo dispositivi con score effettivamente calcolati (criticity_score non NULL)
+                        analyzed_devices = 0
+                        for d in filtered_devices:
+                            device_id = d[0]
+                            score_data = score_lookup.get(device_id)
+                            if score_data and score_data['criticity_score'] is not None:
+                                analyzed_devices += 1
                         
-        #                 total_devices = len(filtered_devices)
-        #                 coverage = (analyzed_devices / total_devices) * 100 if total_devices > 0 else 0
-        #                 st.metric("Analysis Coverage", f"{coverage:.1f}%", 
-        #                             delta=f"{analyzed_devices}/{total_devices} devices")
+                        total_devices = len(filtered_devices)
+                        coverage = (analyzed_devices / total_devices) * 100 if total_devices > 0 else 0
+                        st.metric("Analysis Coverage", f"{coverage:.1f}%", 
+                                    delta=f"{analyzed_devices}/{total_devices} devices")
 
-        #         else:
-        #             st.warning("⚠️ No fuzzy logic results found. Run analysis in 'Scoring Assessment' page first.")
+                else:
+                    st.warning("⚠️ No fuzzy logic results found. Run analysis in 'Scoring Assessment' page first.")
 
-        #     except Exception as e:
-        #         st.error(f"Error checking scoring data: {e}")
+            except Exception as e:
+                st.error(f"Error checking scoring data: {e}")
                 
-        #     df = pd.DataFrame(df_data)
-        #     # Converti i valori numerici da string a float per il coloring
-        #     # Helper function per conversione sicura a float
-        #     def safe_float(val):
-        #         """Converte in float solo se possibile, altrimenti ritorna None"""
-        #         if val == 'N/A' or val is None:
-        #             return None
-        #         try:
-        #             return float(val)
-        #         except (ValueError, TypeError):
-        #             return None
+            df = pd.DataFrame(df_data)
+            # Converti i valori numerici da string a float per il coloring
+            # Helper function per conversione sicura a float
+            def safe_float(val):
+                """Converte in float solo se possibile, altrimenti ritorna None"""
+                if val == 'N/A' or val is None:
+                    return None
+                try:
+                    return float(val)
+                except (ValueError, TypeError):
+                    return None
 
-        #     styled_df = df.style.applymap(
-        #         lambda val: (
-        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 8 else
-        #             'background-color: #fff2e6' if safe_float(val) is not None and safe_float(val) >= 6 else
-        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 4 else
-        #             'background-color: #f0fff0' if safe_float(val) is not None and safe_float(val) >= 2 else
-        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
-        #             ''  # Per 'N/A'
-        #         ),
-        #         subset=['Fuzzy Criticity']
-        #     ).applymap(
-        #         lambda val: (
-        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 50 else
-        #             'background-color: #fff2e6' if safe_float(val) is not None and safe_float(val) >= 40 else
-        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 30 else
-        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
-        #             ''  # Per 'N/A'
-        #         ),
-        #         subset=['RPV1 Criticity']
-        #     ).applymap(
-        #         lambda val: (
-        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 20 else
-        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 10 else
-        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
-        #             ''  # Per 'N/A'
-        #         ),
-        #         subset=['Mission Score']
-        #     ).applymap(
-        #         lambda val: (
-        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 6.5 else
-        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 3.5 else
-        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 0 else
-        #             ''  # Per 'N/A'
-        #         ),
-        #         subset=['Support Score']
-        #     ).applymap(
-        #         lambda val: (
-        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 10 else      
-        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 5 else
-        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
-        #             ''  # Per 'N/A'
-        #         ),
-        #         subset=['Age (years)']
-        #     ).applymap(
-        #         lambda val: (
-        #             'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == 'End of Support' else                
-        #             'background-color: #fffff0' if val != 'N/A' and val == 'End of Life' else
-        #             'background-color: #e6ffe6' if val != 'N/A' and val == '0' else
-        #             ''  # Per 'N/A'
-        #         ),
-        #         subset=['Usage Types']
-        #     ).applymap(
-        #         lambda val: (
-        #             'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) > 3 else      
-        #             'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) > 1 else
-        #             'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
-        #             ''  # Per 'N/A'
-        #         ),
-        #         subset=['Current downtime (days)']
-        #     ).applymap(
-        #         lambda val: (
-        #             'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == '0' else                
-        #             'background-color: #f0fff0' if val != 'N/A' and val == '1-2' else
-        #             'background-color: #e6ffe6' if val != 'N/A' and val == '>=3' else
-        #             ''  # Per 'N/A'
-        #         ),
-        #         subset=['Backup Available']
-        #     ).applymap(
-        #         lambda val: (
-        #             'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == 'Imported and NO avalability of spare parts' else                
-        #             'background-color: #fffff0' if val != 'N/A' and val == 'Local production and NO avalability of spare parts' else
-        #             'background-color: #f0fff0' if val != 'N/A' and val == 'Imported and avalability of spare parts' else
-        #             'background-color: #e6ffe6' if val != 'N/A' and val == 'Local production and avalability of spare parts' else
-        #             ''  # Per 'N/A'
-        #         ),
-        #     )
+            styled_df = df.style.applymap(
+                lambda val: (
+                    'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 8 else
+                    'background-color: #fff2e6' if safe_float(val) is not None and safe_float(val) >= 6 else
+                    'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 4 else
+                    'background-color: #f0fff0' if safe_float(val) is not None and safe_float(val) >= 2 else
+                    'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
+                    ''  # Per 'N/A'
+                ),
+                subset=['Fuzzy Criticity']
+            ).applymap(
+                lambda val: (
+                    'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 50 else
+                    'background-color: #fff2e6' if safe_float(val) is not None and safe_float(val) >= 40 else
+                    'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 30 else
+                    'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
+                    ''  # Per 'N/A'
+                ),
+                subset=['RPV1 Criticity']
+            ).applymap(
+                lambda val: (
+                    'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 20 else
+                    'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 10 else
+                    'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
+                    ''  # Per 'N/A'
+                ),
+                subset=['Mission Score']
+            ).applymap(
+                lambda val: (
+                    'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 6.5 else
+                    'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 3.5 else
+                    'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 0 else
+                    ''  # Per 'N/A'
+                ),
+                subset=['Support Score']
+            ).applymap(
+                lambda val: (
+                    'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) >= 10 else      
+                    'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) >= 5 else
+                    'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
+                    ''  # Per 'N/A'
+                ),
+                subset=['Age (years)']
+            ).applymap(
+                lambda val: (
+                    'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == 'End of Support' else                
+                    'background-color: #fffff0' if val != 'N/A' and val == 'End of Life' else
+                    'background-color: #e6ffe6' if val != 'N/A' and val == '0' else
+                    ''  # Per 'N/A'
+                ),
+                subset=['Usage Types']
+            ).applymap(
+                lambda val: (
+                    'background-color: #ffe6e6; color: #cc0000' if safe_float(val) is not None and safe_float(val) > 3 else      
+                    'background-color: #fffff0' if safe_float(val) is not None and safe_float(val) > 1 else
+                    'background-color: #e6ffe6' if safe_float(val) is not None and safe_float(val) >= 0 else
+                    ''  # Per 'N/A'
+                ),
+                subset=['Current downtime (days)']
+            ).applymap(
+                lambda val: (
+                    'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == '0' else                
+                    'background-color: #f0fff0' if val != 'N/A' and val == '1-2' else
+                    'background-color: #e6ffe6' if val != 'N/A' and val == '>=3' else
+                    ''  # Per 'N/A'
+                ),
+                subset=['Backup Available']
+            ).applymap(
+                lambda val: (
+                    'background-color: #ffe6e6; color: #cc0000' if val != 'N/A' and val == 'Imported and NO avalability of spare parts' else                
+                    'background-color: #fffff0' if val != 'N/A' and val == 'Local production and NO avalability of spare parts' else
+                    'background-color: #f0fff0' if val != 'N/A' and val == 'Imported and avalability of spare parts' else
+                    'background-color: #e6ffe6' if val != 'N/A' and val == 'Local production and avalability of spare parts' else
+                    ''  # Per 'N/A'
+                ),
+            )
 
 
-        #     st.dataframe(styled_df, use_container_width=True, hide_index=True)
+            st.dataframe(styled_df, use_container_width=True, hide_index=True)
 
-        #     # Crea un buffer in memoria
-        #     buffer = BytesIO()
-        #     with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
-        #         df.to_excel(writer, index=False, sheet_name='Device Analysis')
-        #     buffer.seek(0)
+            # Crea un buffer in memoria
+            buffer = BytesIO()
+            with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+                df.to_excel(writer, index=False, sheet_name='Device Analysis')
+            buffer.seek(0)
 
-        #     st.download_button(
-        #         label="📥 Export to Excel",
-        #         data=buffer.getvalue(),
-        #         file_name=f"device_analysis_{dtm.date.today()}.xlsx",
-        #         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        #     )
+            st.download_button(
+                label="📥 Export to Excel",
+                data=buffer.getvalue(),
+                file_name=f"device_analysis_{dtm.date.today()}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+
+
         # with tab2:
         #     if valid_scores:
         #         col1, col2, col3 = st.columns(3)
